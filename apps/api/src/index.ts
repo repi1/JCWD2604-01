@@ -22,7 +22,7 @@ app.use(
 const PORT = process.env.PORT;
 
 //routes
-// app.use('/users', routes.userRoutes);
+app.use('/users', routes.userRoutes);
 app.use('/products', routes.productRoutes);
 // app.use('/transactions', routes.transactionRoutes);
 
