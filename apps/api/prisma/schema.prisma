@@ -17,16 +17,16 @@ enum Users_role {
 }
 
 model Users {
-  id           String         @unique @db.VarChar(255)
-  referralNum  String         @db.VarChar(255)
-  email        String         @db.VarChar(255)
-  password     String         @db.VarChar(255)
+  id           String         @unique @default(uuid()) @db.VarChar(255)
+  referralNum  String         @unique @default(uuid()) @db.VarChar(255)
+  email        String         @unique @db.VarChar(255)
+  password     String         @default(uuid()) @db.VarChar(255)
   name         String         @db.VarChar(255)
-  avatarURL    String         @db.VarChar(255)
+  avatarURL    String?        @db.VarChar(255)
   role         Users_role     @default(user)
   isVerified   Boolean        @default(false)
-  isReset      Boolean
-  createdAt    DateTime
+  isReset      Boolean        @default(false)
+  createdAt    DateTime       @default(now())
   addresses    Addresses[]
   carts        Carts[]
   orders       Orders[]
@@ -178,10 +178,10 @@ enum Vouchers_type {
 }
 
 model Vouchers {
-  id           String         @unique @db.VarChar(255)
+  id           String          @unique @default(uuid()) @db.VarChar(255)
   type         Vouchers_type
-  amount       Decimal        @db.Decimal(18, 2)
-  percentage   Int
+  amount       Decimal         @default(0) @db.Decimal(18, 2)
+  percentage   Int             @default(0)
   userVouchers UserVouchers[]
 }
 
