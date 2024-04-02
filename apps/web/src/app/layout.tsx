@@ -1,13 +1,12 @@
 import type { Metadata } from 'next';
 import { Inter } from 'next/font/google';
 import './globals.css';
-import { Header } from '@/components/Header';
 import { Footer } from '@/components/Footer';
-import { AppRouterCacheProvider } from '@mui/material-nextjs/v13-appRouter';
 import { ChakraProvider } from '@chakra-ui/react';
 import { StoreProvider } from '@/redux/store';
 import ProtectedPage from '@/routes/protected-routes';
 import AuthProvider from '@/routes/auth-provider';
+import Navbar from '@/components/Navbar';
 
 const inter = Inter({ subsets: ['latin'] });
 
@@ -25,15 +24,15 @@ export default function RootLayout({
     <StoreProvider>
       <html lang="en">
         <body className={inter.className}>
-          {/* <Header /> */}
-          <ChakraProvider>
-            <AppRouterCacheProvider>
-              <AuthProvider>
-                <ProtectedPage>{children}</ProtectedPage>
-              </AuthProvider>
-            </AppRouterCacheProvider>
-          </ChakraProvider>
-          <Footer />
+          {/* <ChakraProvider> */}
+          <AuthProvider>
+            <ProtectedPage>
+              <Navbar />
+              {children}
+              <Footer />
+            </ProtectedPage>
+          </AuthProvider>
+          {/* </ChakraProvider> */}
         </body>
       </html>
     </StoreProvider>
