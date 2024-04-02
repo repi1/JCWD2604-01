@@ -16,12 +16,19 @@ enum Users_role {
   superAdmin
 }
 
+enum Gender {
+  male
+  female
+}
+
 model Users {
   id           String         @unique @default(uuid()) @db.VarChar(255)
   referralNum  String         @unique @default(uuid()) @db.VarChar(255)
   email        String         @unique @db.VarChar(255)
   password     String         @default(uuid()) @db.VarChar(255)
   name         String         @db.VarChar(255)
+  gender       Gender         @default(male)
+  birthDate    DateTime
   avatarURL    String?        @db.VarChar(255)
   role         Users_role     @default(user)
   isVerified   Boolean        @default(false)

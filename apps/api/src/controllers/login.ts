@@ -24,6 +24,8 @@ export const loginController = {
         id: user.id,
         email: user.email,
         name: user.name,
+        gender: user.gender,
+        birthDate: user.birthDate,
         role: user.role,
         avatarUrl: user.avatarURL,
       };
@@ -55,6 +57,8 @@ export const loginController = {
           id: true,
           email: true,
           name: true,
+          gender: true,
+          birthDate: true,
           role: true,
           avatarURL: true,
         },

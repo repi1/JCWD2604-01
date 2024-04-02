@@ -33,7 +33,8 @@ function RegisterComponent() {
   const initialValues = {
     email: '',
     name: '',
-    // gender: "male",
+    gender: 'male',
+    birthDate: '',
     referralNum: '',
   };
 
@@ -41,7 +42,8 @@ function RegisterComponent() {
     formik.setValues({
       email: document.getElementById('email').value,
       name: document.getElementById('name').value,
-      // gender: gender,
+      gender: gender,
+      birthDate: document.getElementById('birthDate').value,
       referralNum: document.getElementById('referralNum').value,
     });
   };
@@ -51,16 +53,18 @@ function RegisterComponent() {
     validationSchema: Yup.object().shape({
       email: Yup.string().required().email(),
       name: Yup.string().required().min(4),
-      // gender: Yup.string(),
+      gender: Yup.string(),
+      birthDate: Yup.date().required(),
       referralNum: Yup.string(),
     }),
     async onSubmit(values) {
       try {
-        const { email, name, referralNum } = values;
+        const { email, name, referralNum, gender, birthDate } = values;
         const res = await axiosInstance().post('/users/', {
           email,
           name,
-          // gender,
+          gender,
+          birthDate,
           referralNum,
         });
         Swal.fire({
@@ -87,8 +91,8 @@ function RegisterComponent() {
   });
 
   useEffect(() => {
-    const { email, name } = formik.values;
-    if (email && name) formik.handleSubmit();
+    const { email, name, birthDate } = formik.values;
+    if (email && name && birthDate) formik.handleSubmit();
   }, [formik.values]);
   return (
     <>
@@ -105,7 +109,14 @@ function RegisterComponent() {
             <Input type="email" id="email" />
             <FormHelperText color={'red'}>{formik.errors.email}</FormHelperText>
           </div>
-          {/* <div>
+          <div>
+            <FormLabel>Birth Date</FormLabel>
+            <Input type="date" id="birthDate" />
+            <FormHelperText color={'red'}>
+              {formik.errors.birthDate}
+            </FormHelperText>
+          </div>
+          <div>
             <FormLabel>Gender</FormLabel>
             <RadioGroup onChange={setGender} value={gender}>
               <Stack direction="row">
@@ -113,7 +124,7 @@ function RegisterComponent() {
                 <Radio value="female">Female</Radio>
               </Stack>
             </RadioGroup>
-          </div> */}
+          </div>
           <div>
             <FormLabel>Referral Number</FormLabel>
             <Input type="text" id="referralNum" />

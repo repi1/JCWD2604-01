@@ -14,12 +14,14 @@ const template = fs
 export const registerController = {
   async register(req: Request, res: Response, next: NextFunction) {
     try {
-      const { email, name, referralNum } = req.body;
+      const { email, name, referralNum, gender, birthDate } = req.body;
       let message = '';
       let isReferral = false;
       const newUser: Prisma.UsersCreateInput = {
         email,
         name,
+        gender,
+        birthDate: new Date(birthDate),
       };
       const checkUser = await prisma.users.findUnique({
         where: {
