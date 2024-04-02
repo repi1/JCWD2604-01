@@ -22,9 +22,9 @@ app.use(
 const PORT = process.env.PORT;
 
 //routes
-app.use('/users', routes.userRoutes);
+// app.use('/users', routes.userRoutes);
 app.use('/products', routes.productRoutes);
-app.use('/transactions', routes.transactionRoutes);
+// app.use('/transactions', routes.transactionRoutes);
 
 app.use((error: Error, req: Request, res: Response, next: NextFunction) => {
   res.status(500).send({ message: error.message || 'internal server error' });
