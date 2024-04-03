@@ -7,6 +7,10 @@ import { StoreProvider } from '@/redux/store';
 import ProtectedPage from '@/routes/protected-routes';
 import AuthProvider from '@/routes/auth-provider';
 import Navbar from '@/components/Navbar';
+import { AppRouterCacheProvider } from '@mui/material-nextjs/v13-appRouter';
+import { ThemeProvider } from '@mui/material/styles';
+import theme from '@/components/theme';
+import { Providers } from '@/components/Chakra-provider';
 
 const inter = Inter({ subsets: ['latin'] });
 
@@ -24,15 +28,19 @@ export default function RootLayout({
     <StoreProvider>
       <html lang="en">
         <body className={inter.className}>
-          {/* <ChakraProvider> */}
-          <AuthProvider>
-            <ProtectedPage>
-              <Navbar />
-              {children}
-              <Footer />
-            </ProtectedPage>
-          </AuthProvider>
-          {/* </ChakraProvider> */}
+          <Providers>
+            <AuthProvider>
+              <ProtectedPage>
+                <AppRouterCacheProvider>
+                  <ThemeProvider theme={theme}>
+                    <Navbar />
+                    {children}
+                    <Footer />
+                  </ThemeProvider>
+                </AppRouterCacheProvider>
+              </ProtectedPage>
+            </AuthProvider>
+          </Providers>
         </body>
       </html>
     </StoreProvider>
