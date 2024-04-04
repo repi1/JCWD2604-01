@@ -1,0 +1,7 @@
+DATABASE_URL=
+secretKey=
+nodemailer_email=
+nodemailer_password=
+verifyURL=
+forgotPassURL=
+PORT=

@@ -10,12 +10,211 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model Sample {
-  id        Int      @id @default(autoincrement())
-  name      String
-  code      String   @unique
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+enum Users_role {
+  user
+  storeAdmin
+  superAdmin
+}
 
-  @@map("samples") // if you want to use snake_case format
+enum Gender {
+  male
+  female
+}
+
+model Users {
+  id           String         @unique @default(uuid()) @db.VarChar(255)
+  referralNum  String         @unique @default(uuid()) @db.VarChar(255)
+  email        String         @unique @db.VarChar(255)
+  password     String         @default(uuid()) @db.VarChar(255)
+  name         String         @db.VarChar(255)
+  gender       Gender         @default(male)
+  birthDate    DateTime
+  avatarURL    String?        @db.VarChar(255)
+  role         Users_role     @default(user)
+  isVerified   Boolean        @default(false)
+  isReset      Boolean        @default(false)
+  createdAt    DateTime       @default(now())
+  addresses    Addresses[]
+  carts        Carts[]
+  orders       Orders[]
+  userVouchers UserVouchers[]
+  Stores       Stores[]
+}
+
+model Addresses {
+  id         String @unique @db.VarChar(255)
+  userId     String @db.VarChar(255)
+  streetName String @db.VarChar(255)
+  cityId     String @db.VarChar(255)
+  longitude  String @db.VarChar(255)
+  latitude   String @db.VarChar(255)
+  users      Users  @relation(fields: [userId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+}
+
+model Province {
+  id           String @unique @db.VarChar(255)
+  provinceName String @db.VarChar(255)
+}
+
+model City {
+  id         String @unique @db.VarChar(255)
+  cityName   String @db.VarChar(255)
+  provinceId String @db.VarChar(255)
+}
+
+model Kurir {
+  id        String @unique @db.VarChar(255)
+  kurirName String @db.VarChar(255)
+}
+
+model Products {
+  id            String          @unique @db.VarChar(255)
+  name          String          @db.VarChar(255)
+  price         Decimal         @db.Decimal(18, 2)
+  categoryId    String          @db.VarChar(255)
+  productPhotos ProductPhotos[]
+  categories    Categories      @relation(fields: [categoryId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  stocks        Stocks[]
+  carts         Carts[]
+  promos        Promos[]
+}
+
+model Categories {
+  id       String     @unique @db.VarChar(255)
+  name     String     @db.VarChar(255)
+  products Products[]
+}
+
+model ProductPhotos {
+  id        String   @unique @db.VarChar(255)
+  productId String   @db.VarChar(255)
+  photoURL  String   @db.VarChar(255)
+  products  Products @relation(fields: [productId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+}
+
+model Stores {
+  id         String   @unique @db.VarChar(255)
+  name       String   @db.VarChar(255)
+  userId     String   @db.VarChar(255)
+  streetName String   @db.VarChar(255)
+  cityId     String   @db.VarChar(255)
+  longitude  String   @db.VarChar(255)
+  latitude   String   @db.VarChar(255)
+  users      Users    @relation(fields: [userId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  stocks     Stocks[]
+  orders     Orders[]
+}
+
+model Stocks {
+  id           String         @unique @db.VarChar(255)
+  productId    String         @db.VarChar(255)
+  storeId      String         @db.VarChar(255)
+  stock        Decimal        @db.Decimal(18, 2)
+  products     Products       @relation(fields: [productId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  stores       Stores         @relation(fields: [storeId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  orderDetails OrderDetails[]
+  stockHistory StockHistory[]
+
+  @@id([productId, storeId])
+}
+
+model Carts {
+  userId    String   @db.VarChar(255)
+  productId String   @db.VarChar(255)
+  qty       Decimal  @db.Decimal(18, 2)
+  users     Users    @relation(fields: [userId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  products  Products @relation(fields: [productId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+
+  @@id([userId, productId])
+}
+
+enum Orders_status {
+  paymentPending
+  paymentConfirmation
+  processing
+  delivered
+  deliveryDone
+  cancelled
+}
+
+model Orders {
+  id           String         @unique @db.VarChar(255)
+  invoiceNo    String         @db.VarChar(255)
+  userId       String         @db.VarChar(255)
+  storeId      String         @db.VarChar(255)
+  status       Orders_status  @default(paymentPending)
+  createdAt    DateTime
+  deliveredAt  DateTime
+  streetName   String         @db.VarChar(255)
+  cityId       String         @db.VarChar(255)
+  users        Users          @relation(fields: [userId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  stores       Stores         @relation(fields: [storeId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  orderDetails OrderDetails[]
+  stockHistory StockHistory[]
+}
+
+model OrderDetails {
+  id      String  @unique @db.VarChar(255)
+  orderId String  @db.VarChar(255)
+  stockId String  @db.VarChar(255)
+  qty     Decimal @db.Decimal(18, 2)
+  price   Decimal @db.Decimal(18, 2)
+  orders  Orders  @relation(fields: [orderId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  stocks  Stocks  @relation(fields: [stockId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+}
+
+enum StockHistory_status {
+  in
+  out
+}
+
+model StockHistory {
+  id        String              @unique @db.VarChar(255)
+  orderId   String              @db.VarChar(255)
+  stockId   String              @db.VarChar(255)
+  status    StockHistory_status
+  createdAt DateTime
+  qty       Decimal             @db.Decimal(18, 2)
+  orders    Orders              @relation(fields: [orderId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  stocks    Stocks              @relation(fields: [stockId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+}
+
+enum Vouchers_type {
+  ongkir
+  discount
+}
+
+model Vouchers {
+  id           String          @unique @default(uuid()) @db.VarChar(255)
+  type         Vouchers_type
+  amount       Decimal         @default(0) @db.Decimal(18, 2)
+  percentage   Int             @default(0)
+  userVouchers UserVouchers[]
+}
+
+model UserVouchers {
+  userId    String   @db.VarChar(255)
+  voucherId String   @db.VarChar(255)
+  expiredAt DateTime
+  isValid   Boolean  @default(true)
+  users     Users    @relation(fields: [userId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  vouchers  Vouchers @relation(fields: [voucherId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+
+  @@id([userId, voucherId])
+}
+
+enum Promos_type {
+  buyget
+  discount
+}
+
+model Promos {
+  id         String      @unique @db.VarChar(255)
+  type       Promos_type
+  productId  String      @db.VarChar(255)
+  percentage Int
+  startDate  DateTime
+  endDate    DateTime
+  isValid    Boolean     @default(true)
+  products   Products    @relation(fields: [productId], references: [id], onDelete: NoAction, onUpdate: NoAction)
 }
