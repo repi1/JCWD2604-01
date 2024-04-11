@@ -32,11 +32,7 @@ export default function RootLayout({
             <AuthProvider>
               <ProtectedPage>
                 <AppRouterCacheProvider>
-                  <ThemeProvider theme={theme}>
-                    <Navbar />
-                    {children}
-                    <Footer />
-                  </ThemeProvider>
+                  <ThemeProvider theme={theme}>{children}</ThemeProvider>
                 </AppRouterCacheProvider>
               </ProtectedPage>
             </AuthProvider>

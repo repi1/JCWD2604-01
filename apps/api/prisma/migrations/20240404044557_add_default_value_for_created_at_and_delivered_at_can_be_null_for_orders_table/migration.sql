@@ -1,0 +1,3 @@
+-- AlterTable
+ALTER TABLE `orders` MODIFY `createdAt` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
+    MODIFY `deliveredAt` DATETIME(3) NULL;

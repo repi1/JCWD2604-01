@@ -24,6 +24,7 @@ const PORT = process.env.PORT;
 //routes
 app.use('/users', routes.userRoutes);
 app.use('/products', routes.productRoutes);
+app.use('/summaries', routes.summarryRoutes);
 // app.use('/transactions', routes.transactionRoutes);
 
 app.use((error: Error, req: Request, res: Response, next: NextFunction) => {

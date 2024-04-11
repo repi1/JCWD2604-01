@@ -40,7 +40,7 @@ export const loginController = {
           token,
         });
       }
-      throw Error('email/password not valid');
+      throw Error('invalid email/password');
     } catch (error) {
       next(error);
     }

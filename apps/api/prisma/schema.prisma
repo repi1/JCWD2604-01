@@ -31,6 +31,7 @@ model Users {
   birthDate    DateTime
   avatarURL    String?        @db.VarChar(255)
   role         Users_role     @default(user)
+  storeId      String?        
   isVerified   Boolean        @default(false)
   isReset      Boolean        @default(false)
   createdAt    DateTime       @default(now())
@@ -38,7 +39,7 @@ model Users {
   carts        Carts[]
   orders       Orders[]
   userVouchers UserVouchers[]
-  Stores       Stores[]
+  store        Stores?         @relation(fields: [storeId], references: [id], onDelete: NoAction, onUpdate: NoAction)
 }
 
 model Addresses {
@@ -95,12 +96,11 @@ model ProductPhotos {
 model Stores {
   id         String   @unique @db.VarChar(255)
   name       String   @db.VarChar(255)
-  userId     String   @db.VarChar(255)
   streetName String   @db.VarChar(255)
   cityId     String   @db.VarChar(255)
   longitude  String   @db.VarChar(255)
   latitude   String   @db.VarChar(255)
-  users      Users    @relation(fields: [userId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  users      Users[]
   stocks     Stocks[]
   orders     Orders[]
 }
@@ -143,8 +143,8 @@ model Orders {
   userId       String         @db.VarChar(255)
   storeId      String         @db.VarChar(255)
   status       Orders_status  @default(paymentPending)
-  createdAt    DateTime
-  deliveredAt  DateTime
+  createdAt    DateTime       @default(now())
+  deliveredAt  DateTime?
   streetName   String         @db.VarChar(255)
   cityId       String         @db.VarChar(255)
   users        Users          @relation(fields: [userId], references: [id], onDelete: NoAction, onUpdate: NoAction)

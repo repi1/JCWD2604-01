@@ -12,6 +12,7 @@ export type TUser = {
   isVerified: boolean;
   isReset: boolean;
   role: string;
+  storeId: string;
 };
 
 export interface ReqUser extends Request {
@@ -50,7 +51,8 @@ export const verifyAdmin = async (
 ) => {
   try {
     const { user } = req;
-    if (user?.role !== 'admin') throw Error('admin only');
+    if (user?.role !== 'storeAdmin' && user?.role !== 'superAdmin')
+      throw Error('admin only');
     next();
   } catch (error) {
     next(error);

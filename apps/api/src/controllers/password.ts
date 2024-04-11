@@ -61,4 +61,45 @@ export const passwordController = {
       next(error);
     }
   },
+  async changePassword(req: ReqUser, res: Response, next: NextFunction) {
+    try {
+      const { user } = req;
+      const { oldPassword, password } = req.body;
+      const email = user?.email;
+      const checkUser = await prisma.users.findUnique({
+        where: {
+          email,
+        },
+      });
+      const checkPassword = await compare(
+        String(oldPassword),
+        String(checkUser?.password),
+      );
+      const comparePassword = await compare(
+        String(password),
+        String(checkUser?.password),
+      );
+      if (!checkPassword) throw Error('old password is incorrect');
+      if (comparePassword)
+        throw Error('new password cannot be the same as old password');
+
+      const salt = await genSalt(10);
+      const hashedPassword = await hash(password, salt);
+      const userEditPassword: Prisma.UsersUpdateInput = {
+        password: hashedPassword,
+      };
+      await prisma.users.update({
+        data: userEditPassword,
+        where: {
+          email,
+        },
+      });
+      return res.send({
+        success: true,
+        message: 'success',
+      });
+    } catch (error) {
+      next(error);
+    }
+  },
 };

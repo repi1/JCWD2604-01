@@ -23,9 +23,8 @@ const routes = [];
 routes.push(new Route('/auth/login', guestOnly));
 routes.push(new Route('/auth/register', guestOnly));
 routes.push(new Route('/auth/forgot-password', guestOnly));
-routes.push(new Route('/admin/dashboard', adminOnly));
-routes.push(new Route('/admin/promotion', adminOnly));
-routes.push(new Route('/admin/transaction', adminOnly));
+routes.push(new Route('/auth/change-password', needLogin));
+routes.push(new Route('/admin', adminOnly));
 routes.push(new Route('/transactions', needLogin));
 routes.push(new Route('/history', needLogin));
 
@@ -36,7 +35,11 @@ export default function ProtectedPage({ children }) {
 
   useEffect(() => {
     const checkRoute = routes.find((route) => pathname.includes(route.path));
-    if (checkRoute?.type == adminOnly && userSelector.role != 'admin')
+    if (
+      checkRoute?.type == adminOnly &&
+      userSelector.role != 'storeAdmin' &&
+      userSelector.role != 'superAdmin'
+    )
       return redirect('/auth/login');
     else if (checkRoute?.type == needLogin && !userSelector.email)
       return redirect('/auth/login');
