@@ -28,8 +28,9 @@ route.patch(
   validatePassword,
   passwordController.changePassword,
 );
+route.get('/v7/:userId', userDetailController.getUserDetails);
 route.patch(
-  '/v7',
+  '/v8/:userId',
   verifyUser,
   verifyAdmin,
   userDetailController.changeUserRole,

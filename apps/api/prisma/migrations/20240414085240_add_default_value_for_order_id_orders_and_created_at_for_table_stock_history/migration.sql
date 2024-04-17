@@ -1,0 +1,3 @@
+-- AlterTable
+ALTER TABLE `stockhistory` MODIFY `orderId` VARCHAR(255) NULL,
+    MODIFY `createdAt` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3);

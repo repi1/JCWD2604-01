@@ -15,7 +15,7 @@ import { useTheme } from '@mui/material/styles';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import { useRouter } from 'next/navigation';
 import ButtonBase from '@mui/material/ButtonBase';
-import { AccessTime, ExitToApp } from '@mui/icons-material';
+import { AccessTime, ExitToApp, SupervisorAccount } from '@mui/icons-material';
 import { functionLogout } from '@/redux/slices/userSlice';
 
 const drawerWidth = 240;
@@ -23,7 +23,13 @@ const link = [
   { id: 1, route: '/admin', name: 'Dashboard', icon: <HomeIcon /> },
   {
     id: 2,
-    route: '/admin/history',
+    route: '/admin/manage-user',
+    name: 'Manage Users',
+    icon: <SupervisorAccount />,
+  },
+  {
+    id: 3,
+    route: '/admin/stock-history',
     name: 'Stock History',
     icon: <AccessTime />,
   },

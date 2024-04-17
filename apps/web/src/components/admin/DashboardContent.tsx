@@ -12,11 +12,12 @@ import FormControl from '@mui/material/FormControl';
 import Select, { SelectChangeEvent } from '@mui/material/Select';
 import InputLabel from '@mui/material/InputLabel';
 import { useSelector } from 'react-redux';
+import FilterStoreComponent from './FilterStore';
 
-type Store = {
+export interface Store {
   id: string;
   name: string;
-};
+}
 
 interface State {
   id: string;
@@ -49,35 +50,16 @@ const DashboardContent = () => {
     fetchStores();
   }, [store]);
 
-  const handleChange = (event: SelectChangeEvent<string>) => {
-    setStore(event.target.value);
-  };
-
   return (
     <div className="text-white">
       <div className="flex gap-10 mb-4 items-center">
         <h2 className="text-3xl font-bold text-green-500">Dashboard</h2>
         {userSelector.role == 'superAdmin' ? (
-          <>
-            {' '}
-            <FormControl variant="outlined" style={{ minWidth: 120 }}>
-              <InputLabel id="store-select-label">Branch</InputLabel>
-              <Select
-                labelId="store-select-label"
-                id="storeId"
-                value={store}
-                onChange={handleChange}
-                label="Branch"
-              >
-                <MenuItem value={''}>All Branch</MenuItem>
-                {stores.map((store) => (
-                  <MenuItem key={store.id} value={store.id}>
-                    {store.name}
-                  </MenuItem>
-                ))}
-              </Select>
-            </FormControl>
-          </>
+          <FilterStoreComponent
+            store={store}
+            stores={stores}
+            setStore={setStore}
+          />
         ) : (
           ''
         )}
