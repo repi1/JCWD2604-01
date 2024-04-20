@@ -5,7 +5,6 @@ import FilterStoreComponent from '@/components/admin/FilterStore';
 import { useEffect, useState } from 'react';
 import { axiosInstance } from '@/axios/axios';
 import { TextField } from '@mui/material';
-import { useDebounce } from 'use-debounce';
 export interface Store {
   id: string;
   name: string;
@@ -14,7 +13,6 @@ export default function Home() {
   const [search, setSearch] = useState('');
   const [store, setStore] = useState<string>('');
   const [stores, setStores] = useState<Store[]>([]);
-  const [value] = useDebounce(search, 500);
   const fetchStores = () => {
     axiosInstance()
       .get('summaries/v0')
@@ -26,15 +24,14 @@ export default function Home() {
 
   useEffect(() => {
     fetchStores();
-  }, [value, store]);
+  }, [store]);
   return (
     <Typography paragraph>
-      <div className="flex gap-10 mb-4 items-center">
+      <div className="flex flex-col lg:flex-row gap-2 lg:gap-10 lg:mb-4 lg:items-center">
         <h2 className="text-3xl font-bold text-green-500 mb-4">
           User Management
         </h2>
         <TextField
-          id="outlined-basic"
           label="Email"
           variant="outlined"
           value={search}

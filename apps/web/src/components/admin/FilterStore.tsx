@@ -1,17 +1,9 @@
 'use client';
-import React, { useEffect, useState } from 'react';
-import DashboardProfit from './DashboardProfit';
-import DashboardSales from './DashboardSales';
-import DashboardOrders from './DashboardOrders';
-import DashboardCancelled from './DashboardCancelled';
-import DashboardLatestSale from './DashboardLatestSale';
-import DashboardTopSales from './DashboardTopSales';
-import { axiosInstance } from '@/axios/axios';
+import React from 'react';
 import MenuItem from '@mui/material/MenuItem';
 import FormControl from '@mui/material/FormControl';
 import Select, { SelectChangeEvent } from '@mui/material/Select';
 import InputLabel from '@mui/material/InputLabel';
-import { useSelector } from 'react-redux';
 import { Store } from './DashboardContent';
 
 interface FilterStoreProps {
@@ -30,7 +22,6 @@ const FilterStoreComponent: React.FC<FilterStoreProps> = (props) => {
       <FormControl variant="outlined" style={{ minWidth: 120 }}>
         <InputLabel id="store-select-label">Branch</InputLabel>
         <Select
-          labelId="store-select-label"
           id="storeId"
           value={props.store}
           onChange={handleChange}

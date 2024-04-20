@@ -25,3 +25,5 @@ route.get(
   verifyAdmin,
   stockDetailController.getStockDetails,
 );
+route.get('/v10', summary2Controller.getProducts);
+route.get('/v11', summary2Controller.getCategories);

@@ -6,6 +6,7 @@ import { Box, Pagination } from '@mui/material';
 import { axiosInstance } from '@/axios/axios';
 import StockContentMobileComponent from './StockContentMobile';
 import StockContentPCComponent from './StockContentPC';
+import { useDebounce } from 'use-debounce';
 
 export interface Stock {
   id: string;
@@ -31,6 +32,8 @@ const StockHistoryComponent: React.FC<ProductStore> = ({
   const [pageCount, setPageCount] = useState(0);
   const [page, setPage] = useState(1);
   const [stocks, setStocks] = useState<Stock[]>([]);
+  const [value] = useDebounce(productName, 500);
+  const [value2] = useDebounce(date, 500);
   const handleChange = (event: ChangeEvent<unknown>, value: number) => {
     setPage(value);
   };
@@ -48,7 +51,7 @@ const StockHistoryComponent: React.FC<ProductStore> = ({
 
   useEffect(() => {
     fetchStocks();
-  }, [date, productName, storeId, page]);
+  }, [value2, value, storeId, page]);
   const theme = useTheme();
   const isSmallScreen = useMediaQuery(theme.breakpoints.down('md'));
 

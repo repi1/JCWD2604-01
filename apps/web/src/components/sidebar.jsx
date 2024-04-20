@@ -15,6 +15,7 @@ import { useTheme } from '@mui/material/styles';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import { useRouter } from 'next/navigation';
 import ButtonBase from '@mui/material/ButtonBase';
+import TrendingUpIcon from '@mui/icons-material/TrendingUp';
 import { AccessTime, ExitToApp, SupervisorAccount } from '@mui/icons-material';
 import { functionLogout } from '@/redux/slices/userSlice';
 
@@ -32,6 +33,12 @@ const link = [
     route: '/admin/stock-history',
     name: 'Stock History',
     icon: <AccessTime />,
+  },
+  {
+    id: 4,
+    route: '/admin/sales-report',
+    name: 'Sales Report',
+    icon: <TrendingUpIcon />,
   },
 ];
 export default function Sidebar({ handleDrawerToggle }) {

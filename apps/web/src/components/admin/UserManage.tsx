@@ -8,6 +8,7 @@ import UserEditMobileComponent from './UserEditMobile';
 import UserEditPCComponent from './UserEditPC';
 import Swal from 'sweetalert2';
 import { useRouter } from 'next/navigation';
+import { useDebounce } from 'use-debounce';
 
 export interface User {
   id: string;
@@ -32,6 +33,7 @@ const UserManageComponent: React.FC<UserStore> = ({ email, storeId }) => {
   const [pageCount, setPageCount] = useState(0);
   const [page, setPage] = useState(1);
   const [users, setUsers] = useState<User[]>([]);
+  const [value] = useDebounce(email, 500);
   const handleChange = (event: ChangeEvent<unknown>, value: number) => {
     setPage(value);
   };
@@ -60,7 +62,7 @@ const UserManageComponent: React.FC<UserStore> = ({ email, storeId }) => {
 
   useEffect(() => {
     fetchUsers();
-  }, [email, storeId, page]);
+  }, [value, storeId, page]);
   const theme = useTheme();
   const isSmallScreen = useMediaQuery(theme.breakpoints.down('md'));
   const renderRoleIndicator = (role: User['role']) => {

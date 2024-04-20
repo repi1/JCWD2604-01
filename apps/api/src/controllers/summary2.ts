@@ -1,5 +1,5 @@
 import { Request, Response, NextFunction } from 'express';
-import { Prisma, StockHistory_status } from '@prisma/client';
+import { Prisma } from '@prisma/client';
 import { prisma } from '..';
 import { ReqUser } from '../middlewares/auth-middleware';
 import moment from 'moment';
@@ -93,12 +93,6 @@ export const summary2Controller = {
       if (String(productName)) {
         product.name = { startsWith: String(productName) };
       }
-      // const history: Prisma.StockHistoryWhereInput = {
-      //   createdAt: {
-      //     gte: startDate,
-      //     lt: endDate,
-      //   },
-      // };
       const take = 8;
       const skip = (Number(req.params.id) - 1) * take;
       let stocks: {
@@ -138,9 +132,6 @@ export const summary2Controller = {
         where: {
           stores: { ...store },
           products: { ...product },
-          // stockHistory: {
-          //   some: { ...history },
-          // },
         },
       });
       const pageCount = Math.ceil(count / take);
@@ -148,6 +139,44 @@ export const summary2Controller = {
         success: true,
         result: stocks,
         pageCount,
+      });
+    } catch (error) {
+      next(error);
+    }
+  },
+  async getProducts(req: Request, res: Response, next: NextFunction) {
+    try {
+      const products = await prisma.products.findMany({
+        select: {
+          id: true,
+          name: true,
+        },
+        orderBy: {
+          name: 'asc',
+        },
+      });
+      return res.send({
+        success: true,
+        result: products,
+      });
+    } catch (error) {
+      next(error);
+    }
+  },
+  async getCategories(req: Request, res: Response, next: NextFunction) {
+    try {
+      const categories = await prisma.categories.findMany({
+        select: {
+          id: true,
+          name: true,
+        },
+        orderBy: {
+          name: 'asc',
+        },
+      });
+      return res.send({
+        success: true,
+        result: categories,
       });
     } catch (error) {
       next(error);
