@@ -66,7 +66,7 @@ const SalesLineChart: React.FC<SalesLineChartProps> = ({ sales }) => {
   };
 
   return (
-    <div className=" sm:w-3/4">
+    <div className=" sm:w-4/5">
       <Line data={data} options={options} />
     </div>
   );
