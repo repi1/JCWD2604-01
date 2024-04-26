@@ -170,12 +170,13 @@ enum StockHistory_status {
 
 model StockHistory {
   id        String              @unique @db.VarChar(255)
-  orderId   String?              @db.VarChar(255)
+  orderId   String?             @db.VarChar(255)
   stockId   String              @db.VarChar(255)
   status    StockHistory_status
   createdAt DateTime            @default(now())
   qty       Decimal             @db.Decimal(18, 2)
-  orders    Orders?              @relation(fields: [orderId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  note      String?
+  orders    Orders?             @relation(fields: [orderId], references: [id], onDelete: NoAction, onUpdate: NoAction)
   stocks    Stocks              @relation(fields: [stockId], references: [id], onDelete: NoAction, onUpdate: NoAction)
 }
 

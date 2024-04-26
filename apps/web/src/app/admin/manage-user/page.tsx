@@ -31,16 +31,16 @@ export default function Home() {
         <h2 className="text-3xl font-bold text-green-500 mb-4">
           User Management
         </h2>
+        <FilterStoreComponent
+          store={store}
+          stores={stores}
+          setStore={setStore}
+        />
         <TextField
           label="Email"
           variant="outlined"
           value={search}
           onChange={(e) => setSearch(e.target.value)}
-        />
-        <FilterStoreComponent
-          store={store}
-          stores={stores}
-          setStore={setStore}
         />
       </div>
       <UserManageComponent email={search} storeId={store} />

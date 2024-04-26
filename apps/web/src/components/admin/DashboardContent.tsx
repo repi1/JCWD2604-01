@@ -7,10 +7,6 @@ import DashboardCancelled from './DashboardCancelled';
 import DashboardLatestSale from './DashboardLatestSale';
 import DashboardTopSales from './DashboardTopSales';
 import { axiosInstance } from '@/axios/axios';
-import MenuItem from '@mui/material/MenuItem';
-import FormControl from '@mui/material/FormControl';
-import Select, { SelectChangeEvent } from '@mui/material/Select';
-import InputLabel from '@mui/material/InputLabel';
 import { useSelector } from 'react-redux';
 import FilterStoreComponent from './FilterStore';
 

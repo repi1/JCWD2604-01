@@ -6,12 +6,25 @@ import { createContext, useEffect, useState } from 'react';
 import { axiosInstance } from '@/axios/axios';
 import { TextField } from '@mui/material';
 import moment from 'moment';
+import { useSelector } from 'react-redux';
 export interface Store {
   id: string;
   name: string;
 }
 interface DateContextType {
   date: string;
+}
+interface State {
+  id: string;
+  name: string;
+  email: string;
+  avatarUrl: string;
+  gender: string;
+  birthDate: string;
+  role: string;
+}
+interface Auth {
+  auth: State;
 }
 const currentDate = moment().format('YYYY-MM');
 export const DateContext = createContext<DateContextType>({
@@ -22,6 +35,7 @@ export default function Home() {
   const [store, setStore] = useState<string>('');
   const [stores, setStores] = useState<Store[]>([]);
   const [date, setDate] = useState(currentDate);
+  const userSelector = useSelector((state: Auth) => state.auth);
   const fetchStores = () => {
     axiosInstance()
       .get('summaries/v0')
@@ -48,17 +62,21 @@ export default function Home() {
             value={date}
             onChange={(e) => setDate(e.target.value)}
           />
+          {userSelector.role == 'superAdmin' ? (
+            <FilterStoreComponent
+              store={store}
+              stores={stores}
+              setStore={setStore}
+            />
+          ) : (
+            ''
+          )}
           <TextField
             id="outlined-basic"
             label="Product Name"
             variant="outlined"
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-          />
-          <FilterStoreComponent
-            store={store}
-            stores={stores}
-            setStore={setStore}
           />
         </div>
         <StockHistoryComponent

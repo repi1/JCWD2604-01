@@ -16,6 +16,7 @@ export interface StockDetail {
   invoiceNo: string;
   status: string;
   qty: number;
+  note: string;
 }
 interface Props {
   params: { stockId: string; date: string };

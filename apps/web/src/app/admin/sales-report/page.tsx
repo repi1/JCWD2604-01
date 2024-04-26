@@ -10,10 +10,23 @@ import FormControl from '@mui/material/FormControl';
 import Select, { SelectChangeEvent } from '@mui/material/Select';
 import InputLabel from '@mui/material/InputLabel';
 import FilterEntriesComponent from '@/components/admin/FilterEntries';
+import { useSelector } from 'react-redux';
 
 export interface Store {
   id: string;
   name: string;
+}
+interface State {
+  id: string;
+  name: string;
+  email: string;
+  avatarUrl: string;
+  gender: string;
+  birthDate: string;
+  role: string;
+}
+interface Auth {
+  auth: State;
 }
 const currentDate = moment().format('YYYY-MM');
 export default function Home() {
@@ -24,6 +37,7 @@ export default function Home() {
   const [date, setDate] = useState(currentDate);
   const [productId, setProducitId] = useState('');
   const [categoryId, setCategoryId] = useState('');
+  const userSelector = useSelector((state: Auth) => state.auth);
   const handleChange = (event: SelectChangeEvent<string>) => {
     setSelector(event.target.value);
     setId('');
@@ -58,11 +72,15 @@ export default function Home() {
           value={date}
           onChange={(e) => setDate(e.target.value)}
         />
-        <FilterStoreComponent
-          store={store}
-          stores={stores}
-          setStore={setStore}
-        />
+        {userSelector.role == 'superAdmin' ? (
+          <FilterStoreComponent
+            store={store}
+            stores={stores}
+            setStore={setStore}
+          />
+        ) : (
+          ''
+        )}
         <FormControl style={{ minWidth: 120 }}>
           <InputLabel>Filter By</InputLabel>
           <Select value={selector} label="Filter By" onChange={handleChange}>

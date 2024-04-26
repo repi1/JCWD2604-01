@@ -55,6 +55,12 @@ const StockDetailMobileComponent: React.FC<StockDetailProps> = (stock) => {
               {stock.qty.toLocaleString('id-ID')}
             </span>
           </Typography>
+          <Typography variant="body1" className="font-bold text-green-800">
+            Note:{' '}
+            <span className="font-normal text-green-600">
+              {stock.note ? stock.note : '-'}
+            </span>
+          </Typography>
         </div>
       </div>
     </Paper>

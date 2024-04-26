@@ -4,3 +4,9 @@ import express, { Router } from 'express';
 
 export const route: Router = express.Router();
 route.get('/', verifyUser, verifyAdmin, salesReportConstroller.getSalesByDay);
+route.get(
+  '/page/:id',
+  verifyUser,
+  verifyAdmin,
+  salesReportConstroller.getSalesByDayTable,
+);

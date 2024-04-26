@@ -23,6 +23,7 @@ export const stockDetailController = {
         select: {
           id: true,
           createdAt: true,
+          note: true,
           stocks: {
             select: {
               products: { select: { name: true } },
@@ -52,6 +53,7 @@ export const stockDetailController = {
         storeName: item.stocks.stores.name,
         invoiceNo: item.orders?.invoiceNo,
         status: item.status,
+        note: item.note,
         qty: Number(item.qty),
       }));
       const count = await prisma.stockHistory.count({

@@ -31,6 +31,7 @@ const StockDetailPCComponent: React.FC<StockDetailProps> = ({ stocks }) => {
             <TableCell>Invoice No.</TableCell>
             <TableCell>Status</TableCell>
             <TableCell>Qty</TableCell>
+            <TableCell>Note</TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
@@ -58,6 +59,7 @@ const StockDetailPCComponent: React.FC<StockDetailProps> = ({ stocks }) => {
                   </div>
                 </TableCell>
                 <TableCell>{stock.qty.toLocaleString('id-ID')}</TableCell>
+                <TableCell>{stock.note ? stock.note : '-'}</TableCell>
               </TableRow>
             );
           })}
