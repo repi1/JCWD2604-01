@@ -4,13 +4,24 @@ import { axiosInstance } from '@/axios/axios';
 import { functionLogin, functionLogout } from '../slices/userSlice';
 import Swal from 'sweetalert2';
 
-export const userLogin = ({ email, password }, router) => {
+export const userLogin = ({ email, password, social }, router) => {
   return async (dispatch) => {
     return new Promise(async (resolve, reject) => {
       try {
-        const res = await axiosInstance().get('/users', {
-          params: { email, password },
-        });
+        let res = {};
+        if (social == 'none') {
+          res = await axiosInstance().get('/users', {
+            params: { email, password },
+          });
+        } else if (social == 'google') {
+          res = await axiosInstance().get('/users/google', {
+            params: { email },
+          });
+        }
+        if (res.data.result == 'none') {
+          localStorage.setItem('user', res.data.token);
+          router.push('/auth/registerSocial/' + res.data.token);
+        }
         if (res.data.result?.id) {
           const userData = res.data.result;
           Swal.fire({

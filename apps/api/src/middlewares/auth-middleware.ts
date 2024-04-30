@@ -15,6 +15,14 @@ export type TUser = {
   storeId: string;
 };
 
+export type TSocial = {
+  email: string;
+};
+
+export interface ReqSocial extends Request {
+  user?: TSocial;
+}
+
 export interface ReqUser extends Request {
   user?: TUser;
 }
@@ -56,5 +64,27 @@ export const verifyAdmin = async (
     next();
   } catch (error) {
     next(error);
+  }
+};
+export const verifySocial = async (
+  req: ReqSocial,
+  res: Response,
+  next: NextFunction,
+) => {
+  try {
+    const token = req.headers.authorization;
+
+    if (!token) throw Error('unauthorized');
+
+    const verifyToken = verify(String(token), secretKey) as TUser;
+
+    const user = {
+      email: verifyToken?.email,
+    } as TSocial;
+    if (!user.email) throw Error('not found');
+    req.user = user as TSocial;
+    next();
+  } catch (err) {
+    next(err);
   }
 };

@@ -4,16 +4,21 @@ import { userLogin } from '@/redux/middleware/user';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useDispatch } from 'react-redux';
+import { signInWithGoogle } from '../../../redux/middleware/google';
+import GoogleIcon from '@mui/icons-material/Google';
 function Page() {
   const dispatch = useDispatch();
   const router = useRouter();
   const login = () => {
     const email = document.getElementById('email').value;
     const password = document.getElementById('password').value;
+    const social = 'none';
 
-    dispatch(userLogin({ email, password }, router));
+    dispatch(userLogin({ email, password, social }, router));
   };
-
+  const googleLogin = () => {
+    signInWithGoogle(dispatch, router);
+  };
   return (
     <>
       <div
@@ -53,10 +58,17 @@ function Page() {
             </Link>
           </div>
           <button
-            className="  rounded-lg mt-2 text-white bg-[#4F46E5] h-16"
+            className="  rounded my-2 text-white bg-green-500 hover:bg-green-700 py-4 font-bold"
             onClick={login}
           >
             Login
+          </button>
+          <button
+            onClick={googleLogin}
+            className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-4 px-4 rounded flex justify-center items-center"
+          >
+            <GoogleIcon style={{ color: 'white', marginRight: '8px' }} />
+            Sign in with Google
           </button>
         </div>
       </div>

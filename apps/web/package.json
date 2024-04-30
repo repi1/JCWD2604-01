@@ -20,6 +20,7 @@
     "@reduxjs/toolkit": "^2.2.2",
     "axios": "^1.6.8",
     "chart.js": "^4.4.2",
+    "firebase": "^10.11.1",
     "formik": "^2.4.5",
     "framer-motion": "^11.0.22",
     "moment": "^2.30.1",

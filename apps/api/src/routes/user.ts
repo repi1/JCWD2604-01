@@ -3,12 +3,17 @@ import { Response, Request, NextFunction } from 'express';
 
 import express, { Router } from 'express';
 import { registerController } from '../controllers/register';
-import { verifyAdmin, verifyUser } from '../middlewares/auth-middleware';
+import {
+  verifyAdmin,
+  verifySocial,
+  verifyUser,
+} from '../middlewares/auth-middleware';
 import { validateRegister } from '../middlewares/input-validator';
 import { passwordController } from '../controllers/password';
 import { validatePassword } from '../middlewares/password-validator';
 import { loginController } from '../controllers/login';
 import { userDetailController } from '../controllers/userDetail';
+import { googleController } from '../controllers/google';
 export const route: Router = express.Router();
 route.get('/', loginController.login);
 route.get('/v1', loginController.keepLogin);
@@ -35,3 +40,5 @@ route.patch(
   verifyAdmin,
   userDetailController.changeUserRole,
 );
+route.get('/google', googleController.login);
+route.post('/google', verifySocial, googleController.register);
