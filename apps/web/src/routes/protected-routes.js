@@ -39,13 +39,22 @@ export default function ProtectedPage({ children }) {
       checkRoute?.type == adminOnly &&
       userSelector.role != 'storeAdmin' &&
       userSelector.role != 'superAdmin'
-    )
+    ) {
+      localStorage.setItem('path', pathname);
+
       return redirect('/auth/login');
-    else if (checkRoute?.type == needLogin && !userSelector.email)
+    } else if (checkRoute?.type == needLogin && !userSelector.email) {
+      localStorage.setItem('path', pathname);
       return redirect('/auth/login');
-    else if (checkRoute?.type == guestOnly && userSelector.email)
-      return redirect('/');
-    else
+    } else if (checkRoute?.type == guestOnly && userSelector.email) {
+      const path = localStorage.getItem('path');
+      if (!userSelector.role.includes('Admin')) {
+        if (path) return redirect(path);
+        return redirect('/');
+      }
+
+      return redirect('/admin');
+    } else
       setTimeout(() => {
         setIsLoading(false);
       }, 500);

@@ -3,6 +3,7 @@
 import { axiosInstance } from '@/axios/axios';
 import { functionLogin, functionLogout } from '../slices/userSlice';
 import Swal from 'sweetalert2';
+import { usePathname } from 'next/navigation';
 
 export const userLogin = ({ email, password, social }, router) => {
   return async (dispatch) => {
@@ -35,9 +36,9 @@ export const userLogin = ({ email, password, social }, router) => {
                 userData.role == 'superAdmin' ||
                 userData.role == 'storeAdmin'
               ) {
-                router.push('/admin');
-              } else {
-                router.back();
+              //   router.push('/admin');
+              // } else {
+              //   router.back();
               }
               resolve();
             },
