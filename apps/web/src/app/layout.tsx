@@ -34,7 +34,7 @@ export default function RootLayout({
                 <AppRouterCacheProvider>
                   <ThemeProvider theme={theme}>
                     {children}
-                    <Footer />
+                    {/* <Footer /> */}
                   </ThemeProvider>
                 </AppRouterCacheProvider>
               </ProtectedPage>
