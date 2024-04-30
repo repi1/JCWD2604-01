@@ -5,10 +5,12 @@ import CarouselComponent from '@/components/CarouselComponent';
 import CategorySlider from '@/components/CategorySlider';
 import ProductCard from '@/components/ProductCard';
 import ProductTab from '@/components/ProductTab';
+import Navbar from '@/components/Navbar';
 
 export default function Home() {
   return (
     <main>
+      <Navbar />
       <CarouselComponent />
       <CategorySlider />
       <ProductTab />

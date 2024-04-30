@@ -19,14 +19,6 @@ export const productController = {
             },
           },
         },
-        where: {
-          name: { contains: String(name).toLowerCase() },
-          categories: {
-            name: {
-              contains: String(category_name).toLowerCase(),
-            },
-          },
-        },
       });
       res.send({
         success: true,

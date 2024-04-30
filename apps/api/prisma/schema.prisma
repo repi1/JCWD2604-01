@@ -7,7 +7,7 @@ generator client {
 
 datasource db {
   provider = "mysql"
-  url      = env("DATABASE_URL")
+  url = env("DATABASE_URL")
 }
 
 enum Users_role {
@@ -72,6 +72,7 @@ model Products {
   name          String          @db.VarChar(255)
   price         Decimal         @db.Decimal(18, 2)
   categoryId    String          @db.VarChar(255)
+  weight         Decimal         @db.Decimal(18, 2)
   productPhotos ProductPhotos[]
   categories    Categories      @relation(fields: [categoryId], references: [id], onDelete: NoAction, onUpdate: NoAction)
   stocks        Stocks[]

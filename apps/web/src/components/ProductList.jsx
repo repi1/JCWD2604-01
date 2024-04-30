@@ -3,6 +3,7 @@ import { useState, useEffect, useRef } from 'react';
 import { useDebounce } from 'use-debounce';
 import { axiosInstance } from '../axios/axios';
 import Link from 'next/link';
+import Image from 'next/image';
 
 export function ProductList() {
   const [search, setSearch] = useState('');
@@ -12,7 +13,7 @@ export function ProductList() {
 
   function fetchProducts() {
     axiosInstance()
-      .get('/products/', {
+      .get('/products', {
         params: {
           name: search,
           category_name: category,
@@ -92,10 +93,12 @@ export function ProductCard({ id, name, price, productPhotos, categories }) {
         href={'/products/' + id}
       >
         <div className="">
-          <img
-            src={productPhotos[0].photoURL}
+          <Image
+            src={`/product-image/${productPhotos[0].photoURL}`}
             className="h-[200px] w-full object-cover rounded-xl"
             alt=""
+            width={30}
+            height={30}
           />
         </div>
         <div>
