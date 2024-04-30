@@ -5,6 +5,7 @@ import { PrismaClient } from '@prisma/client';
 import { routes } from './routes';
 import cors from 'cors';
 import { config } from 'dotenv';
+import path from 'path';
 config();
 
 export const prisma = new PrismaClient();
@@ -26,6 +27,10 @@ app.use('/users', routes.userRoutes);
 app.use('/products', routes.productRoutes);
 app.use('/summaries', routes.summarryRoutes);
 app.use('/sales', routes.salesReportRoutes);
+// app.use('/transactions', routes.transactionRoutes);
+app.use('/profile', routes.profileRoutes);
+app.use('/cart', routes.cartRoutes);
+app.use(express.static(path.join(__dirname, 'images')));
 
 app.use((error: Error, req: Request, res: Response, next: NextFunction) => {
   res.status(500).send({ message: error.message || 'internal server error' });
