@@ -31,13 +31,15 @@
     "nodemailer": "^6.9.13",
     "ts-node": "^10.9.2",
     "ts-node-dev": "^2.0.0",
-    "typescript": "^5.3.3"
+    "typescript": "^5.3.3",
+    "uuid": "^9.0.1"
   },
   "devDependencies": {
     "@types/cors": "^2.8.17",
     "@types/express": "^4.17.21",
     "@types/multer": "^1.4.11",
     "@types/mustache": "^4.2.5",
+    "@types/uuid": "^9.0.8",
     "prettier": "^3.2.5",
     "prisma": "^5.7.1",
     "tsconfig-paths": "^4.2.0"

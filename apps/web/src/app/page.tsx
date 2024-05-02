@@ -14,7 +14,7 @@ export default function Home() {
       <CarouselComponent />
       <CategorySlider />
       <ProductTab />
-      {/* <ProductList /> */}
+      <ProductList />
     </main>
   );
 }

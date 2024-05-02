@@ -69,11 +69,11 @@ model Kurir {
 }
 
 model Products {
-  id            String          @unique @db.VarChar(255)
+  id            String          @unique @default(uuid()) @db.VarChar(255)
   name          String          @db.VarChar(255)
   price         Decimal         @db.Decimal(18, 2)
   categoryId    String          @db.VarChar(255)
-  weight         Decimal         @db.Decimal(18, 2)
+  weight        Decimal         @db.Decimal(18, 2)
   productPhotos ProductPhotos[]
   categories    Categories      @relation(fields: [categoryId], references: [id], onDelete: NoAction, onUpdate: NoAction)
   stocks        Stocks[]

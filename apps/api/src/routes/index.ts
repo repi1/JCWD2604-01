@@ -1,6 +1,8 @@
 /** @format */
 import { route as userRoutes } from './user';
 import { route as productRoutes } from './products';
+import { route as productPhotosRoutes } from './productPhotos';
+import { route as categoryRoutes } from './categories';
 import { route as summarryRoutes } from './summary';
 import { route as salesReportRoutes } from './salesReport';
 import { route as profileRoutes } from './profile';
@@ -10,6 +12,8 @@ import { route as cartRoutes } from './cart';
 export const routes = {
   userRoutes,
   productRoutes,
+  productPhotosRoutes,
+  categoryRoutes,
   summarryRoutes,
   salesReportRoutes,
   profileRoutes,

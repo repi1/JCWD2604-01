@@ -1,6 +1,13 @@
 /** @format */
 
-import express, { Application, Response, Request, NextFunction } from 'express';
+import express, {
+  Application,
+  Response,
+  Request,
+  NextFunction,
+  request,
+  response,
+} from 'express';
 import { PrismaClient } from '@prisma/client';
 import { routes } from './routes';
 import cors from 'cors';
@@ -25,6 +32,12 @@ const PORT = process.env.PORT;
 //routes
 app.use('/users', routes.userRoutes);
 app.use('/products', routes.productRoutes);
+app.use('/productPhotos', routes.productPhotosRoutes, (req, res) => {
+  console.log(req.body);
+  console.log(req.file);
+  res.json({ status: 'Files Received' });
+});
+app.use('/categories', routes.categoryRoutes);
 app.use('/summaries', routes.summarryRoutes);
 app.use('/sales', routes.salesReportRoutes);
 // app.use('/transactions', routes.transactionRoutes);
