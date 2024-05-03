@@ -25,7 +25,8 @@ routes.push(new Route('/auth/register', guestOnly));
 routes.push(new Route('/auth/forgot-password', guestOnly));
 routes.push(new Route('/auth/change-password', needLogin));
 routes.push(new Route('/admin', adminOnly));
-routes.push(new Route('/transactions', needLogin));
+routes.push(new Route('/transaction', needLogin));
+routes.push(new Route('/profile', needLogin));
 routes.push(new Route('/history', needLogin));
 
 export default function ProtectedPage({ children }) {

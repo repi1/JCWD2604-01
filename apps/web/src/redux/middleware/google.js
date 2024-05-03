@@ -3,12 +3,12 @@ import { getAuth, signInWithPopup, GoogleAuthProvider } from 'firebase/auth';
 import { userLogin } from '@/redux/middleware/user';
 
 const firebaseConfig = {
-  apiKey: 'AIzaSyAM8gopy-UNby4GfQHQN2rPRZWaDk18BLQ',
-  authDomain: 'fir-test-fc90e.firebaseapp.com',
-  projectId: 'fir-test-fc90e',
-  storageBucket: 'fir-test-fc90e.appspot.com',
-  messagingSenderId: '998226219171',
-  appId: '1:998226219171:web:72e62bf7f0237080232f16',
+  apiKey: process.env.NEXT_PUBLIC_FIREBASE_API_KEY,
+  authDomain: process.env.NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN,
+  projectId: process.env.NEXT_PUBLIC_FIREBASE_PROJECTID,
+  storageBucket: process.env.NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET,
+  messagingSenderId: process.env.NEXT_PUBLIC_FIREBASE_MESSAGING_SENDERID,
+  appId: process.env.NEXT_PUBLIC_FIREBASE_APPID,
 };
 
 const app = initializeApp(firebaseConfig);
