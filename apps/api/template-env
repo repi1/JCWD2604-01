@@ -5,3 +5,4 @@ nodemailer_password=
 verifyURL=
 forgotPassURL=
 PORT=
+OPENCAGE_API_KEY=
