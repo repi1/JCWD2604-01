@@ -2,11 +2,15 @@
 import axios from 'axios';
 import Image from 'next/image';
 import React, { useEffect } from 'react';
+import { TiDelete } from 'react-icons/ti';
 
 const CartItem = ({ item }) => {
   const imageUrl = `http://localhost:8000/${item.products.productPhotos[0].photoURL}`;
   const totalPrice = item.products.price * item.qty;
   const totalWeight = item.products.weight * item.qty;
+  function deleteItem() {
+    
+  }
 
   return (
     <div className="flex flex-col justify-between border border-lightblue rounded-xl p-4 shadow-md">
@@ -23,6 +27,7 @@ const CartItem = ({ item }) => {
           <p>Quantity: {item.qty}</p>
         </div>
       </div>
+      <TiDelete className="w-6 h-6" onClick={deleteItem}/>
     </div>
   );
 };
