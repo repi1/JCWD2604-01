@@ -45,23 +45,16 @@ model Users {
 model Addresses {
   id         String @unique @db.VarChar(255)
   userId     String @db.VarChar(255)
-  streetName String @db.VarChar(255)
-  cityId     String @db.VarChar(255)
+  streetName String @db.VarChar(255) 
+  city        String @db.VarChar(255) @default(",")
   longitude  String @db.VarChar(255)
   latitude   String @db.VarChar(255)
+  isActive  Boolean @default(true)
   users      Users  @relation(fields: [userId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  orders        Orders[]
 }
 
-model Province {
-  id           String @unique @db.VarChar(255)
-  provinceName String @db.VarChar(255)
-}
 
-model City {
-  id         String @unique @db.VarChar(255)
-  cityName   String @db.VarChar(255)
-  provinceId String @db.VarChar(255)
-}
 
 model Kurir {
   id        String @unique @db.VarChar(255)
@@ -98,7 +91,7 @@ model Stores {
   id         String   @unique @db.VarChar(255)
   name       String   @db.VarChar(255)
   streetName String   @db.VarChar(255)
-  cityId     String   @db.VarChar(255)
+  city     String   @db.VarChar(255) @default(",")
   longitude  String   @db.VarChar(255)
   latitude   String   @db.VarChar(255)
   users      Users[]
@@ -146,8 +139,8 @@ model Orders {
   status       Orders_status  @default(paymentPending)
   createdAt    DateTime       @default(now())
   deliveredAt  DateTime?
-  streetName   String         @db.VarChar(255)
-  cityId       String         @db.VarChar(255)
+  addressId     String?        @db.VarChar(255) // New field for addressId
+  address       Addresses?     @relation(fields: [addressId], references: [id], onDelete: NoAction, onUpdate: NoAction)
   users        Users          @relation(fields: [userId], references: [id], onDelete: NoAction, onUpdate: NoAction)
   stores       Stores         @relation(fields: [storeId], references: [id], onDelete: NoAction, onUpdate: NoAction)
   orderDetails OrderDetails[]

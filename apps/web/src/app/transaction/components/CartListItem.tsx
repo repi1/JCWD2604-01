@@ -1,12 +1,17 @@
 'use client';
 import axios from 'axios';
 import Image from 'next/image';
-import React, { useEffect } from 'react';
+import React, { useEffect, useCallback } from 'react';
 
-const CartListItem = ({ item }) => {
+const CartListItem = ({ item, onPriceUpdate }) => {
   const imageUrl = `http://localhost:8000/${item.products.productPhotos[0].photoURL}`;
   const totalPrice = item.products.price * item.qty;
   const totalWeight = item.products.weight * item.qty;
+
+  useEffect(() => {
+    const data = item.products.price * item.qty;
+    onPriceUpdate(data);
+  }, []);
 
   return (
     <div className="flex flex-col justify-between border border-lightblue rounded-xl p-4 shadow-md">

@@ -6,6 +6,7 @@ import Button from '@mui/material/Button';
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 import axios from 'axios';
 import Swal from 'sweetalert2';
+import AddressSection from './AddressSection';
 
 const VisuallyHiddenInput = styled('input')({
   clip: 'rect(0 0 0 0)',
@@ -206,40 +207,6 @@ const ProfilePage = () => {
                 required
               />
             </div>
-            {/* <div className="mb-4">
-              <label
-                htmlFor="birthdate"
-                className="block text-gray-700 font-bold mb-2"
-              >
-                Birthdate
-              </label>
-              <input
-                type="date"
-                id="birthdate"
-                name="birthdate"
-                className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                required
-              />
-            </div> */}
-            {/* <div className="mb-6">
-              <label
-                htmlFor="gender"
-                className="block text-gray-700 font-bold mb-2"
-              >
-                Gender
-              </label>
-              <select
-                id="gender"
-                name="gender"
-                className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                required
-              >
-                <option value="">Select your gender</option>
-                <option value="male">Male</option>
-                <option value="female">Female</option>
-                <option value="other">Other</option>
-              </select>
-            </div> */}
             <div className="flex items-center gap-5">
               <button
                 type="submit"
@@ -258,6 +225,7 @@ const ProfilePage = () => {
           </form>
         </div>
       )}
+      {user && <AddressSection user={user} />}
     </>
   );
 };
