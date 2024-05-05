@@ -50,7 +50,10 @@ export default function ProtectedPage({ children }) {
     } else if (checkRoute?.type == guestOnly && userSelector.email) {
       const path = localStorage.getItem('path');
       if (!userSelector.role.includes('Admin')) {
-        if (path) return redirect(path);
+        if (path) {
+          localStorage.removeItem('path');
+          return redirect(path);
+        }
         return redirect('/');
       }
 
