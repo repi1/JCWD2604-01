@@ -106,21 +106,21 @@ export const summary2Controller = {
         out: number;
       }[] = [];
       stocks = await prisma.$queryRaw(Prisma.sql`
-      SELECT SUM(stock) as totalStock, stocks.id,stocks.storeId, stores.name as store, stocks.productId, products.name, 
-      COALESCE(SUM(CASE WHEN stockHistory.status = 'in' THEN stockHistory.qty ELSE 0 END), 0) AS "in", 
-      COALESCE(SUM(CASE WHEN stockHistory.status = 'out' THEN stockHistory.qty ELSE 0 END), 0) AS "out" 
-      FROM stocks LEFT JOIN stores ON stocks.storeId=stores.id LEFT JOIN products ON stocks.productId=products.id
-      LEFT JOIN stockHistory ON stocks.id=stockHistory.stockId AND createdAt>=${startDate} AND createdAt<${endDate}
+      SELECT SUM(stock) as totalStock, Stocks.id,Stocks.storeId, Stores.name as store, Stocks.productId, Products.name, 
+      COALESCE(SUM(CASE WHEN StockHistory.status = 'in' THEN StockHistory.qty ELSE 0 END), 0) AS "in", 
+      COALESCE(SUM(CASE WHEN StockHistory.status = 'out' THEN StockHistory.qty ELSE 0 END), 0) AS "out" 
+      FROM Stocks LEFT JOIN Stores ON Stocks.storeId=Stores.id LEFT JOIN Products ON Stocks.productId=Products.id
+      LEFT JOIN StockHistory ON Stocks.id=StockHistory.stockId AND createdAt>=${startDate} AND createdAt<${endDate}
       ${
         storeId && productName
-          ? Prisma.sql`WHERE stocks.storeId = ${storeId} AND products.name LIKE ${productName + '%'}`
+          ? Prisma.sql`WHERE Stocks.storeId = ${storeId} AND Products.name LIKE ${productName + '%'}`
           : storeId
-            ? Prisma.sql`WHERE stocks.storeId = ${storeId}`
+            ? Prisma.sql`WHERE Stocks.storeId = ${storeId}`
             : productName
-              ? Prisma.sql`WHERE products.name LIKE ${productName + '%'}`
+              ? Prisma.sql`WHERE Products.name LIKE ${productName + '%'}`
               : Prisma.sql``
       }
-      GROUP BY stocks.id ORDER BY products.name LIMIT ${take} OFFSET ${skip} `);
+      GROUP BY Stocks.id ORDER BY Products.name LIMIT ${take} OFFSET ${skip} `);
 
       stocks = stocks.map((stock) => ({
         ...stock,

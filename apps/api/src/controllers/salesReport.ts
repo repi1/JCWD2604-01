@@ -23,8 +23,8 @@ export const salesReportConstroller = {
         day: number;
       }[] = [];
       totalSalesByDay = await prisma.$queryRaw(Prisma.sql`
-        SELECT SUM(od.price) as totalSales, DAY(o.createdAt) as day FROM orders o JOIN orderDetails od ON o.id = od.orderId
-        JOIN stocks s ON od.stockId = s.id JOIN products p ON s.productId = p.id
+        SELECT SUM(od.price) as totalSales, DAY(o.createdAt) as day FROM Orders o JOIN OrderDetails od ON o.id = od.orderId
+        JOIN Stocks s ON od.stockId = s.id JOIN Products p ON s.productId = p.id
         WHERE o.status = "deliveryDone" AND createdAt>=${startDate} AND createdAt<${endDate} 
         ${storeId ? Prisma.sql`AND o.storeId=${storeId}` : Prisma.sql``} 
         ${categoryId ? Prisma.sql`AND p.categoryId=${categoryId}` : Prisma.sql``}
@@ -74,8 +74,8 @@ export const salesReportConstroller = {
         day: number;
       }[] = [];
       totalSalesByDay = await prisma.$queryRaw(Prisma.sql`
-        SELECT SUM(od.price) as totalSales, DAY(o.createdAt) as day FROM orders o JOIN orderDetails od ON o.id = od.orderId
-        JOIN stocks s ON od.stockId = s.id JOIN products p ON s.productId = p.id
+        SELECT SUM(od.price) as totalSales, DAY(o.createdAt) as day FROM Orders o JOIN OrderDetails od ON o.id = od.orderId
+        JOIN Stocks s ON od.stockId = s.id JOIN Products p ON s.productId = p.id
         WHERE o.status = "deliveryDone" AND createdAt>=${startDate} AND createdAt<${endDate} 
         ${storeId ? Prisma.sql`AND o.storeId=${storeId}` : Prisma.sql``} 
         ${categoryId ? Prisma.sql`AND p.categoryId=${categoryId}` : Prisma.sql``}
@@ -89,10 +89,10 @@ export const salesReportConstroller = {
         count: number;
       }
       const countSales: CountSales[] = await prisma.$queryRaw(Prisma.sql`
-        SELECT COUNT(DISTINCT DAY(o.createdAt)) as count FROM orders o
-        JOIN orderDetails od ON o.id = od.orderId
-        JOIN stocks s ON od.stockId = s.id
-        JOIN products p ON s.productId = p.id
+        SELECT COUNT(DISTINCT DAY(o.createdAt)) as count FROM Orders o
+        JOIN OrderDetails od ON o.id = od.orderId
+        JOIN Stocks s ON od.stockId = s.id
+        JOIN Products p ON s.productId = p.id
         WHERE o.status = "deliveryDone" AND createdAt>=${startDate} AND createdAt<${endDate} 
         ${storeId ? Prisma.sql`AND o.storeId=${storeId}` : Prisma.sql``} 
         ${categoryId ? Prisma.sql`AND p.categoryId=${categoryId}` : Prisma.sql``}

@@ -108,8 +108,8 @@ export const summaryController = {
       let sales: { totalSales: number }[] = [];
       sales = await prisma.$queryRaw(
         Prisma.sql`
-    SELECT SUM(price) as totalSales from orderDetails join orders on orderDetails.orderId=orders.id where orders.status='deliveryDone' 
-    ${storeId ? Prisma.sql`and storeId=${storeId}` : Prisma.sql``}  and orders.createdAt>=${startDate} and orders.createdAt<${endDate};`,
+    SELECT SUM(price) as totalSales from OrderDetails join Orders on OrderDetails.orderId=Orders.id where Orders.status='deliveryDone' 
+    ${storeId ? Prisma.sql`and storeId=${storeId}` : Prisma.sql``}  and Orders.createdAt>=${startDate} and Orders.createdAt<${endDate};`,
       );
       return res.send({
         success: true,
@@ -134,10 +134,10 @@ export const summaryController = {
       let sales: { name: string; totalSales: number }[] = [];
       sales = await prisma.$queryRaw(
         Prisma.sql`
-        SELECT products.id, name, sum(qty) as totalSales from orderDetails join orders on orderDetails.orderId=orders.id join stocks on 
-        orderDetails.stockId=stocks.id join products on stocks.productId = products.id where orders.status='deliveryDone' 
-        ${storeId ? Prisma.sql`and orders.storeId=${storeId}` : Prisma.sql``}  and orders.createdAt>=${startDate} and 
-        orders.createdAt<${endDate} group by stocks.productId order by totalSales desc;`,
+        SELECT Products.id, name, sum(qty) as totalSales from OrderDetails join Orders on OrderDetails.orderId=Orders.id join Stocks on 
+        OrderDetails.stockId=Stocks.id join Products on Stocks.productId = Products.id where Orders.status='deliveryDone' 
+        ${storeId ? Prisma.sql`and Orders.storeId=${storeId}` : Prisma.sql``}  and Orders.createdAt>=${startDate} and 
+        Orders.createdAt<${endDate} group by Stocks.productId order by totalSales desc;`,
       );
       sales = sales.map((sale) => ({
         ...sale,
@@ -172,10 +172,10 @@ export const summaryController = {
       }[] = [];
       sales = await prisma.$queryRaw(
         Prisma.sql`
-        select orders.id, orders.createdAt, users.name, orders.status, sum(price) as totalSales  from orders join users on 
-        orders.userId = users.id join orderDetails on orders.id = orderDetails.orderId where 
-        ${storeId ? Prisma.sql`orders.storeId=${storeId} and` : Prisma.sql``} orders.createdAt>=${startDate} and 
-        orders.createdAt<${endDate} group by orders.id order by orders.createdAt asc limit 8;`,
+        select Orders.id, Orders.createdAt, Users.name, Orders.status, sum(price) as totalSales  from Orders join Users on 
+        Orders.userId = Users.id join OrderDetails on Orders.id = OrderDetails.orderId where 
+        ${storeId ? Prisma.sql`Orders.storeId=${storeId} and` : Prisma.sql``} Orders.createdAt>=${startDate} and 
+        Orders.createdAt<${endDate} group by Orders.id order by Orders.createdAt asc limit 8;`,
       );
       sales = sales.map((sale) => ({
         ...sale,
