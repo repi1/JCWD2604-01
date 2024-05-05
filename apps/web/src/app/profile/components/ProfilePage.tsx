@@ -7,6 +7,7 @@ import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 import axios from 'axios';
 import Swal from 'sweetalert2';
 import AddressSection from './AddressSection';
+import { useSelector } from 'react-redux';
 
 const VisuallyHiddenInput = styled('input')({
   clip: 'rect(0 0 0 0)',
@@ -26,11 +27,14 @@ const ProfilePage = () => {
   const [email, setEmail] = useState<string | null>(null);
   const [editClick, setEditClick] = useState(false);
   const [imageUrl, setImageUrl] = useState('');
+  const userSelector = useSelector((state) => state.auth);
 
   useEffect(() => {
     const fetchUserData = async () => {
       try {
-        const response = await axios.get('http://localhost:8000/profile/1');
+        const response = await axios.get(
+          `http://localhost:8000/profile/${userSelector.id}`,
+        );
         const userData = response.data;
         setEmail(userData.email);
         setName(userData.name);
@@ -57,7 +61,7 @@ const ProfilePage = () => {
 
     try {
       const response = await axios.post(
-        'http://localhost:8000/profile/1/upload',
+        `http://localhost:8000/profile/${userSelector.id}/upload`,
         formData,
         {
           headers: {
@@ -80,7 +84,7 @@ const ProfilePage = () => {
     e.preventDefault();
 
     axios
-      .patch('http://localhost:8000/profile/1', {
+      .patch(`http://localhost:8000/profile/${userSelector.id}`, {
         name: name,
         email: email,
       })
