@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import Address from './Address';
 import Swal from 'sweetalert2';
+import { useSelector } from 'react-redux';
 
 const AddressSection = ({ user }) => {
   const [address, setAddress] = useState([]);
@@ -11,6 +12,7 @@ const AddressSection = ({ user }) => {
   const [city, setCity] = useState<string | null>(null);
   const [location, setLocation] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
+  const userSelector = useSelector((state) => state.auth);
 
   const apiKey = 'f5df53c750014d129128dc96143e3feb';
 
@@ -53,7 +55,7 @@ const AddressSection = ({ user }) => {
     try {
       // userId, latitude, longitude, city, streetName
       const response = await axios.post('http://localhost:8000/address', {
-        userId: user.id,
+        userId: userSelector.id,
         latitude: String(latitude),
         longitude: String(longitude),
         streetName: location,
@@ -105,6 +107,8 @@ const AddressSection = ({ user }) => {
         <div className="flex flex-col">
           <h1>{latitude}</h1>
           <h1>{longitude}</h1>
+          <h1>{location}</h1>
+          <h1>{city}</h1>
           <button type="submit" onClick={getCurrentLocation}>
             Use Current Location
           </button>

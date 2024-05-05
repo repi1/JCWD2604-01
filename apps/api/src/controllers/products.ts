@@ -82,7 +82,7 @@ export const productController = {
       await prisma.products.create({
         data: newProduct,
       });
-      
+
       res.send({
         success: true,
         message: 'Produk berhasil ditambahkan',

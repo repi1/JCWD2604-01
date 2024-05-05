@@ -55,7 +55,7 @@ function Page() {
           )}
           {error ? <p>Error: {error}</p> : null}
         </div>
-        <button id="detect-location-button">Detect your location</button>
+        <button id="detect-location-button">Detect your location</button>      
       </div>
     </div>
   );
