@@ -28,6 +28,7 @@ export const loginController = {
         birthDate: user.birthDate,
         role: user.role,
         avatarUrl: user.avatarURL,
+        storeId: user.storeId,
       };
       if (checkPassword) {
         const token = sign(resUser, secretKey, {
@@ -61,6 +62,7 @@ export const loginController = {
           birthDate: true,
           role: true,
           avatarURL: true,
+          storeId: true,
         },
         where: {
           email: verifyUser.email,

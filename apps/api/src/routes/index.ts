@@ -9,6 +9,7 @@ import { route as profileRoutes } from './profile';
 import { route as cartRoutes } from './cart';
 import { route as addressRoutes } from './address';
 import { route as orderRoutes } from './orders';
+import { route as stocksRoutes } from './stocks';
 // import { route as transactionRoutes } from './transaction';
 
 export const routes = {
@@ -16,6 +17,7 @@ export const routes = {
   productRoutes,
   productPhotosRoutes,
   categoryRoutes,
+  stocksRoutes,
   summarryRoutes,
   salesReportRoutes,
   profileRoutes,

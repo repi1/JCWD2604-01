@@ -4,17 +4,10 @@ import { productPhotosController } from '../controllers/productPhotos';
 import upload from '../middlewares/multer';
 
 export const route: Router = express.Router();
-// route.post(
-//   '/',
-//   fileUploader({
-//     prefix: 'PRODUCT',
-//     filetype: 'image',
-//   }).array('image'),
-//   productPhotosController.createProductPhotos,
-// );
 
+route.get('/:id', productPhotosController.getProductPhotos);
 route.post(
-  'products/:id/upload',
+  'productPhotos/:id/upload',
   upload.array('image', 5),
   productPhotosController.createProductPhotos,
 );

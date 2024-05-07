@@ -32,12 +32,9 @@ const PORT = process.env.PORT;
 //routes
 app.use('/users', routes.userRoutes);
 app.use('/products', routes.productRoutes);
-app.use('/productPhotos', routes.productPhotosRoutes, (req, res) => {
-  console.log(req.body);
-  console.log(req.file);
-  res.json({ status: 'Files Received' });
-});
+app.use('/productPhotos', routes.productPhotosRoutes);
 app.use('/categories', routes.categoryRoutes);
+app.use('/stocks', routes.stocksRoutes);
 app.use('/summaries', routes.summarryRoutes);
 app.use('/sales', routes.salesReportRoutes);
 // app.use('/transactions', routes.transactionRoutes);
