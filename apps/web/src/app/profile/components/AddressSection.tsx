@@ -63,8 +63,8 @@ const AddressSection = ({ user }) => {
       });
       setShowAddAddress(false);
       Swal.fire({
-        title: 'Good job!',
-        text: 'You clicked the button!',
+        title: 'Success!',
+        text: 'address added!',
         icon: 'success',
       });
     } catch (error) {
@@ -92,7 +92,7 @@ const AddressSection = ({ user }) => {
     };
 
     fetchAddress();
-  }, []);
+  }, [address]);
   return (
     <>
       <div>

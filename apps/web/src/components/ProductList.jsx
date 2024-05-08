@@ -92,7 +92,7 @@ export function ProductList() {
 }
 
 export function ProductCard({ id, name, price, productPhotos, categories }) {
-  const [quantity, setQuantity] = useState(0);
+  const [quantity, setQuantity] = useState(1);
   const userSelector = useSelector((state) => state.auth);
 
   async function addToCart() {
@@ -123,19 +123,21 @@ export function ProductCard({ id, name, price, productPhotos, categories }) {
     <div className='className="flex flex-col bg-gray-100 rounded-xl shadow-lg"'>
       <Link href={'/products/' + id}>
         <div className="">
-          <Image
+          {/* <Image
             src={`/product-image/${productPhotos[0].photoURL}`}
             className="h-[200px] w-full object-cover rounded-xl"
             alt=""
             width={30}
             height={30}
-          />
-          {/* <CardMedia
-            component="img"
-            alt={name}
-            height="140"
-            image={`http://localhost:8000/${productPhotos[0].photoURL}`}
           /> */}
+          <CardMedia
+            component="img"
+            className="h-[200px] w-full object-cover rounded-xl"
+            alt={name}
+            width={30}
+            height={30}
+            image={`http://localhost:8000/${productPhotos[0].photoURL}`}
+          />
         </div>
         <div>
           <div className="w-full h-full p-3 flex flex-col justify-between gap-2 ">

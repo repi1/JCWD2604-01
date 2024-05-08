@@ -36,7 +36,9 @@ export default function Navbar() {
   useEffect(() => {
     const fetchCart = async () => {
       try {
-        const response = await axios.get('http://localhost:8000/cart/1');
+        const response = await axios.get(
+          'http://localhost:8000/cart/' + userSelector.id,
+        );
         const cartData = response.data;
         setCartItems(cartData);
       } catch (error) {
@@ -130,7 +132,7 @@ export default function Navbar() {
         </Link>
         <div className="flex flex-col text-white">
           <div className="flex">
-            <p>Dikirimkan ke {currentCity ? currentCity : 'Loading...'}</p>
+            <p>{currentCity ? 'Dikirimkan ke ' + currentCity : 'No Address'}</p>
             <Box
               sx={{
                 display: 'flex-end',

@@ -28,6 +28,7 @@ routes.push(new Route('/admin', adminOnly));
 routes.push(new Route('/transaction', needLogin));
 routes.push(new Route('/profile', needLogin));
 routes.push(new Route('/history', needLogin));
+routes.push(new Route('/orders', needLogin));
 
 export default function ProtectedPage({ children }) {
   const userSelector = useSelector((state) => state.auth);

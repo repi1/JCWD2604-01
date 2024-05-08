@@ -4,16 +4,19 @@ import Image from 'next/image';
 import React, { useEffect } from 'react';
 import { TiDelete } from 'react-icons/ti';
 import Swal from 'sweetalert2';
+import { useSelector } from 'react-redux';
 
 const CartItem = ({ item }) => {
   const imageUrl = `http://localhost:8000/${item.products.productPhotos[0].photoURL}`;
   const totalPrice = item.products.price * item.qty;
   const totalWeight = item.products.weight * item.qty;
+  const userSelector = useSelector((state) => state.auth);
 
   async function deleteItem() {
     try {
       const deletedItem = await axios.delete(
-        `http://localhost:8000/cart/${item.products.id}?userId=1`,
+        `http://localhost:8000/cart/${item.products.id}?userId=` +
+          userSelector.id,
       );
       Swal.fire({
         title: 'Delete Success!',

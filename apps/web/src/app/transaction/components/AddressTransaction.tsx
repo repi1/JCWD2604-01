@@ -1,9 +1,11 @@
 'use client';
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
+import { useSelector } from 'react-redux';
 import KurirCost from './KurirCost';
 
 const AddressTransaction = ({ weight, productTotal }) => {
+  const userSelector = useSelector((state) => state.auth);
   const [userAddresses, setUserAddresses] = useState([]);
   const [userActiveAddress, setUserActiveAddress] = useState({});
   const [storeAddresses, setStoreAddresses] = useState([]);
@@ -34,7 +36,9 @@ const AddressTransaction = ({ weight, productTotal }) => {
   useEffect(() => {
     const fetchAddresses = async () => {
       try {
-        const response = await axios.get('http://localhost:8000/address/1');
+        const response = await axios.get(
+          'http://localhost:8000/address/' + userSelector.id,
+        );
         const addressesData = response.data;
         setUserAddresses(addressesData);
 
