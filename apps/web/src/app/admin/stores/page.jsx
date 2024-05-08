@@ -115,13 +115,13 @@ export function ProductCard({
   categories,
   stocks,
 }) {
-  const [name1, setName1] = useState('');
-  const [price1, setPrice1] = useState('');
-  const [weight1, setWeight1] = useState('');
-  const [stock1, setStock1] = useState('');
-  const [category1, setCategory1] = useState('');
+  const [name1, setName1] = useState(name);
+  const [price1, setPrice1] = useState(price);
+  const [weight1, setWeight1] = useState(weight);
+  const [stock1, setStock1] = useState(stocks[0].stock);
+  const [category1, setCategory1] = useState(categories.id);
 
-  const save = () => {
+  const edit = () => {
     const patchData = {
       name: name1,
       price: price1,
@@ -130,10 +130,36 @@ export function ProductCard({
       category: category1,
     };
     axiosInstance()
-      .patch('/products/' + id, patchData)
+      .patch(`/products/${id}`, patchData) // Update product information
       .then(() => {
         alert('data berhasil diedit');
-        // fetchEvents();
+        // Fetch updated product information
+        axiosInstance()
+          .get(`/products/${id}`)
+          .then((res) => {
+            const updatedProduct = res.data.result;
+            // Update stock information
+            const stockData = {
+              stock: patchData.stock,
+            };
+            axiosInstance()
+              .patch('/stocks', stockData, {
+                params: {
+                  id: stocks[0].id,
+                },
+              })
+              .then(() => {
+                // Handle successful stock update
+                console.log('Stock updated successfully');
+              })
+              .catch((err) => {
+                console.log(err);
+              });
+          })
+          .catch((err) => {
+            console.log(err);
+          });
+        // Reload the page
         location.reload();
       })
       .catch((err) => {
@@ -143,32 +169,17 @@ export function ProductCard({
 
   return (
     <>
-      <div className="flex h-48 bg-gray-100 rounded-xl shadow-lg">
+      <div className="flex h-60 bg-gray-100 rounded-xl shadow-lg">
         <div className="">
           <Image
             src={`/product-image/${productPhotos[0].photoURL}`}
-            className="h-full w-[200px] object-cover rounded-xl"
+            className="h-full w-[256px] object-cover rounded-xl"
             alt=""
             width={30}
             height={30}
           />
         </div>
         <div>
-          {/* <form className="w-full h-full p-3 flex flex-col justify-between gap-2 ">
-            <div className="text-2xl font-bold w-full" type="text" id="name">
-              {name}
-            </div>
-            <div className="text-sm text-black font-normal flex gap-1">
-              Price: {price}
-            </div>
-            <div className="text-sm text-black font-normal flex gap-1">
-              Weight: {weight}
-            </div>
-            <div className="text-sm text-black font-normal flex gap-1">
-              Stock: {stocks[0].stock}
-            </div>
-            <div>{category.name}</div>
-          </form> */}
           <form className="w-full h-full p-3 flex flex-col justify-between gap-2 ">
             <input
               className="text-2xl font-bold w-full"
@@ -183,21 +194,22 @@ export function ProductCard({
                 className="text-sm text-black font-normal w-full"
                 type="number"
                 id="price"
-                placeholder={`Price: ${price}`}
+                placeholder={price}
                 onChange={(event) => setPrice1(event.target.value)}
               />
             </div>
             <div className="text-sm text-black font-normal flex gap-1">
-              <div>Weight:</div>
+              Weight:
               <input
                 className="text-sm text-black font-normal w-full"
                 type="number"
                 id="weight"
-                placeholder={`Weight: ${weight}`}
+                placeholder={weight}
                 onChange={(event) => setWeight1(event.target.value)}
               />
             </div>
             <div className="text-sm text-black font-normal flex gap-1">
+              Stocks:{' '}
               <input
                 className="text-sm text-black font-normal w-full"
                 type="number"
@@ -219,6 +231,12 @@ export function ProductCard({
                 </option>
               ))}
             </select>
+            <button
+              className="bg-orange-500 hover:bg-orange-700 text-white font-bold py-2 px-4 rounded"
+              onClick={edit}
+            >
+              Edit Product
+            </button>
           </form>
         </div>
       </div>
