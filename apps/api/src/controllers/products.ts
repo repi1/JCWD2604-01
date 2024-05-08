@@ -22,6 +22,7 @@ export const productController = {
           },
           stocks: {
             select: {
+              id: true,
               stock: true,
               storeId: true,
             },
@@ -65,6 +66,7 @@ export const productController = {
           },
           stocks: {
             select: {
+              id: true,
               stock: true,
               storeId: true,
             },
@@ -145,8 +147,8 @@ export const productController = {
 
       const editedEvent: Prisma.ProductsUpdateInput = {
         name: String(name),
-        price: parseFloat(price),
-        weight: parseFloat(weight),
+        price: Number(price),
+        weight: Number(weight),
         categories: {
           connect: {
             id: String(categoryId),

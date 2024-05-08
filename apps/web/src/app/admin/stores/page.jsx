@@ -1,15 +1,11 @@
 'use client';
 import { useState, useEffect, useRef } from 'react';
 import { useDebounce } from 'use-debounce';
+import { useFormik } from 'formik';
 import { axiosInstance } from '../../../axios/axios';
 import { useSelector } from 'react-redux';
 import Link from 'next/link';
 import Image from 'next/image';
-
-// export const metadata = {
-//   title: 'Product Detail',
-//   description: 'tempat jualan :)',
-// };
 
 export function Page() {
   const [search, setSearch] = useState('');
@@ -119,6 +115,32 @@ export function ProductCard({
   categories,
   stocks,
 }) {
+  const [name1, setName1] = useState('');
+  const [price1, setPrice1] = useState('');
+  const [weight1, setWeight1] = useState('');
+  const [stock1, setStock1] = useState('');
+  const [category1, setCategory1] = useState('');
+
+  const save = () => {
+    const patchData = {
+      name: name1,
+      price: price1,
+      weight: weight1,
+      stock: stock1,
+      category: category1,
+    };
+    axiosInstance()
+      .patch('/products/' + id, patchData)
+      .then(() => {
+        alert('data berhasil diedit');
+        // fetchEvents();
+        location.reload();
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
+
   return (
     <>
       <div className="flex h-48 bg-gray-100 rounded-xl shadow-lg">
@@ -132,13 +154,28 @@ export function ProductCard({
           />
         </div>
         <div>
+          {/* <form className="w-full h-full p-3 flex flex-col justify-between gap-2 ">
+            <div className="text-2xl font-bold w-full" type="text" id="name">
+              {name}
+            </div>
+            <div className="text-sm text-black font-normal flex gap-1">
+              Price: {price}
+            </div>
+            <div className="text-sm text-black font-normal flex gap-1">
+              Weight: {weight}
+            </div>
+            <div className="text-sm text-black font-normal flex gap-1">
+              Stock: {stocks[0].stock}
+            </div>
+            <div>{category.name}</div>
+          </form> */}
           <form className="w-full h-full p-3 flex flex-col justify-between gap-2 ">
             <input
               className="text-2xl font-bold w-full"
               type="text"
               id="name"
               placeholder={name}
-              value={name}
+              onChange={(event) => setName1(event.target.value)}
             />
             <div className="text-sm text-black font-normal flex gap-1">
               Price:
@@ -146,8 +183,8 @@ export function ProductCard({
                 className="text-sm text-black font-normal w-full"
                 type="number"
                 id="price"
-                placeholder={price}
-                value={price}
+                placeholder={`Price: ${price}`}
+                onChange={(event) => setPrice1(event.target.value)}
               />
             </div>
             <div className="text-sm text-black font-normal flex gap-1">
@@ -156,14 +193,23 @@ export function ProductCard({
                 className="text-sm text-black font-normal w-full"
                 type="number"
                 id="weight"
-                placeholder={weight}
-                value={weight}
+                placeholder={`Weight: ${weight}`}
+                onChange={(event) => setWeight1(event.target.value)}
               />
             </div>
             <div className="text-sm text-black font-normal flex gap-1">
-              Stock: {stocks[0].stock}
+              <input
+                className="text-sm text-black font-normal w-full"
+                type="number"
+                id="weight"
+                placeholder={stocks[0].stock}
+                onChange={(event) => setStock1(event.target.value)}
+              />
             </div>
-            <select id="category">
+            <select
+              id="category"
+              onChange={(event) => setCategory1(event.target.value)}
+            >
               {categ.map((category) => (
                 <option
                   value={category.id}
