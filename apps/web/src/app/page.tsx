@@ -13,7 +13,7 @@ export default function Home() {
       <Navbar />
       <CarouselComponent />
       <CategorySlider />
-      <ProductTab />
+      {/* <ProductTab /> */}
       <ProductList />
     </main>
   );

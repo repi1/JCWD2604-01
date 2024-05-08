@@ -82,7 +82,8 @@ export const cartController = {
   // delete Cart
   async deleteCart(req: Request, res: Response, next: NextFunction) {
     try {
-      const { productId, userId } = req.body;
+      const userId = req.query.userId as string;
+      const { productId } = req.params;
 
       if (!productId || !userId) {
         return res.status(400).json({ error: 'Missing required fields' });

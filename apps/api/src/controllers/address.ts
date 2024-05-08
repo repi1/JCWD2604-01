@@ -84,4 +84,34 @@ export const addressController = {
   },
 
   // Update Address
+  async updateIsActive(req: Request, res: Response, next: NextFunction) {
+    try {
+      const { addressId } = req.params;
+      const { userId } = req.body;
+
+      const deActivate = await prisma.addresses.updateMany({
+        where: {
+          userId,
+        },
+        data: {
+          isActive: false,
+        },
+      });
+
+      const activate = await prisma.addresses.update({
+        where: {
+          id: addressId,
+        },
+        data: {
+          isActive: true,
+        },
+      });
+      res.status(200).json({ message: 'Success' });
+    } catch (error) {
+      console.error('Error Creating Address:', error);
+      res.status(500).json({ error: 'Failed to fetch Address' });
+    } finally {
+      await prisma.$disconnect();
+    }
+  },
 };

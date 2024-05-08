@@ -15,6 +15,7 @@ route.get('/', addressController.getAllUserAddress);
 route.get('/:id', addressController.getAnUserAddress);
 
 // Delete Address based on id
-route.delete('/:id', addressController.deleteAddress);
+route.delete('/:addressId', addressController.deleteAddress);
 
 // Update Address
+route.patch('/:addressId', addressController.updateIsActive);

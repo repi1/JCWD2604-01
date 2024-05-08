@@ -3,13 +3,30 @@ import axios from 'axios';
 import Image from 'next/image';
 import React, { useEffect } from 'react';
 import { TiDelete } from 'react-icons/ti';
+import Swal from 'sweetalert2';
 
 const CartItem = ({ item }) => {
   const imageUrl = `http://localhost:8000/${item.products.productPhotos[0].photoURL}`;
   const totalPrice = item.products.price * item.qty;
   const totalWeight = item.products.weight * item.qty;
-  function deleteItem() {
-    
+
+  async function deleteItem() {
+    try {
+      const deletedItem = await axios.delete(
+        `http://localhost:8000/cart/${item.products.id}?userId=1`,
+      );
+      Swal.fire({
+        title: 'Delete Success!',
+        text: 'You deleted the cart item!',
+        icon: 'success',
+      });
+    } catch (error) {
+      Swal.fire({
+        icon: 'error',
+        title: 'Oops...',
+        text: 'Something went wrong!',
+      });
+    }
   }
 
   return (
@@ -27,7 +44,7 @@ const CartItem = ({ item }) => {
           <p>Quantity: {item.qty}</p>
         </div>
       </div>
-      <TiDelete className="w-6 h-6" onClick={deleteItem}/>
+      <TiDelete className="w-6 h-6" onClick={deleteItem} />
     </div>
   );
 };

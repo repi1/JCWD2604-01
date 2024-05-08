@@ -8,6 +8,8 @@ import ProductCard from '@/components/ProductCard';
 import { productData } from './data/productData';
 import { useEffect } from 'react';
 import axios from 'axios';
+import { axiosInstance, axiosInstanceSSR } from '@/axios/axios';
+import { useDebounce } from 'use-debounce';
 
 interface TabPanelProps {
   children?: React.ReactNode;
@@ -48,11 +50,30 @@ const ProductTab = () => {
   const [susuCategory, setSusuCategory] = useState(null);
   const [buahCategory, setBuahCategory] = useState(null);
   const [products, setProducts] = useState([]);
+  const [search, setSearch] = useState('');
+  const [category, setCategory] = useState('');
+  const [searchValue] = useDebounce(search, 500);
+
+  function fetchProducts() {
+    axiosInstance()
+      .get('/products', {
+        params: {
+          name: search,
+          category_name: category,
+        },
+      })
+      .then((res) => {
+        setProducts(res.data.result);
+      })
+      .catch((err) => console.log(err));
+  }
 
   useEffect(() => {
     const fetchProducts = async () => {
       try {
-        const response = await axios.get('http://localhost:8000/products');
+        const response = await axios.get(
+          'http://localhost:8000/products?name&category_name',
+        );
         const productData = response.data.result;
         setProducts(productData);
       } catch (error) {
@@ -72,6 +93,15 @@ const ProductTab = () => {
 
   return (
     <div className="w-full bg-orange-100">
+      <div className="flex items-center gap-3  border-gray-300 border-b">
+        <input
+          type="search"
+          placeholder="Search any products"
+          className=" outline-none bg-orange-100"
+          value={search}
+          onChange={(e) => setSearch(e.target.value)}
+        />
+      </div>
       <Box sx={{ width: '100%' }}>
         <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
           <Tabs
@@ -86,7 +116,7 @@ const ProductTab = () => {
           </Tabs>
         </Box>
         <CustomTabPanel value={value} index={0}>
-          <div className="grid grid-cols-2 gap-5">
+          <div className="grid grid-cols-2 gap-5 md:grid-cols-4">
             {products
               .filter(
                 (product) => product.categories.name === 'Susu dan Olahan',
@@ -97,7 +127,7 @@ const ProductTab = () => {
           </div>
         </CustomTabPanel>
         <CustomTabPanel value={value} index={1}>
-          <div className="grid grid-cols-2 gap-5">
+          <div className="grid grid-cols-2 gap-5 md:grid-cols-4">
             {products
               .filter((product) => product.categories.name === 'Sayur')
               .map((product) => (
@@ -106,12 +136,10 @@ const ProductTab = () => {
           </div>
         </CustomTabPanel>
         <CustomTabPanel value={value} index={2}>
-          <div className="grid grid-cols-2 gap-5">
-            {products
-              .filter((product) => product.categories.name === 'Buah')
-              .map((product) => (
-                <ProductCard product={product} key={product.id} />
-              ))}
+          <div className="grid grid-cols-2 gap-5 md:grid-cols-4">
+            {products.map((product) => (
+              <ProductCard product={product} key={product.id} />
+            ))}
           </div>
         </CustomTabPanel>
       </Box>

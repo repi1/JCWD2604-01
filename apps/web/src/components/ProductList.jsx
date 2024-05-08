@@ -4,6 +4,12 @@ import { useDebounce } from 'use-debounce';
 import { axiosInstance } from '../axios/axios';
 import Link from 'next/link';
 import Image from 'next/image';
+import Button from '@mui/material/Button';
+import Swal from 'sweetalert2';
+import QuantityInput from './QuantityInput';
+import axios from 'axios';
+import { useSelector } from 'react-redux';
+import CardMedia from '@mui/material/CardMedia';
 
 export function ProductList() {
   const [search, setSearch] = useState('');
@@ -86,12 +92,36 @@ export function ProductList() {
 }
 
 export function ProductCard({ id, name, price, productPhotos, categories }) {
+  const [quantity, setQuantity] = useState(0);
+  const userSelector = useSelector((state) => state.auth);
+
+  async function addToCart() {
+    try {
+      // console.log(id);
+      // console.log(quantity);
+      const postData = {
+        userId: userSelector.id,
+        productId: id,
+        quantity: quantity,
+      };
+      const response = await axios.post('http://localhost:8000/cart', postData);
+      Swal.fire({
+        title: 'Success!',
+        text: 'Add Product To cart!',
+        icon: 'success',
+      });
+    } catch (error) {
+      Swal.fire({
+        icon: 'error',
+        title: 'Failed',
+        text: 'Failed to Add to Cart',
+      });
+      console.log(error);
+    }
+  }
   return (
-    <>
-      <Link
-        className="flex flex-col bg-gray-100 rounded-xl shadow-lg"
-        href={'/products/' + id}
-      >
+    <div className='className="flex flex-col bg-gray-100 rounded-xl shadow-lg"'>
+      <Link href={'/products/' + id}>
         <div className="">
           <Image
             src={`/product-image/${productPhotos[0].photoURL}`}
@@ -100,6 +130,12 @@ export function ProductCard({ id, name, price, productPhotos, categories }) {
             width={30}
             height={30}
           />
+          {/* <CardMedia
+            component="img"
+            alt={name}
+            height="140"
+            image={`http://localhost:8000/${productPhotos[0].photoURL}`}
+          /> */}
         </div>
         <div>
           <div className="w-full h-full p-3 flex flex-col justify-between gap-2 ">
@@ -109,6 +145,14 @@ export function ProductCard({ id, name, price, productPhotos, categories }) {
           </div>
         </div>
       </Link>
-    </>
+      {userSelector.id && (
+        <div>
+          <QuantityInput onChange={setQuantity} />
+          <Button size="small" onClick={addToCart}>
+            Add To Cart
+          </Button>
+        </div>
+      )}
+    </div>
   );
 }

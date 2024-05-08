@@ -19,6 +19,8 @@ import CartItem from './CartItem';
 import Link from 'next/link';
 import axios from 'axios';
 import Button from '@mui/material/Button';
+import Swal from 'sweetalert2';
+
 import { useSelector } from 'react-redux';
 import { FaRegUser } from 'react-icons/fa';
 import { useDispatch } from 'react-redux';
@@ -26,7 +28,9 @@ import { functionLogout } from '@/redux/slices/userSlice';
 
 export default function Navbar() {
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
+  const [currentCity, setCurrentCity] = useState('');
   const [cartItems, setCartItems] = useState([]);
+  const [userAddresses, setUserAddresses] = useState([]);
   const userSelector = useSelector((state) => state.auth);
 
   useEffect(() => {
@@ -41,24 +45,74 @@ export default function Navbar() {
     };
 
     fetchCart();
+  }, [cartItems]);
 
-    return () => {
-      // Cleanup logic
+  useEffect(() => {
+    const fetchAddress = async () => {
+      try {
+        const response = await axios.get(
+          `http://localhost:8000/address/${userSelector?.id}`,
+        );
+        const addressData = response.data;
+        setUserAddresses(addressData);
+
+        if (addressData) {
+          for (let i = 0; i < addressData.length; i++) {
+            if (addressData[i].isActive === true) {
+              setCurrentCity(addressData[i].city);
+            }
+          }
+        }
+      } catch (error) {
+        console.error('Error fetching user data:', error);
+      }
     };
+
+    fetchAddress();
   }, []);
 
   const [anchorEl, setAnchorEl] = useState(null);
+  const [anchorAddress, setAnchorAddress] = useState(null);
+
   const open = Boolean(anchorEl);
+  const openAddress = Boolean(anchorAddress);
   const dispatch = useDispatch();
+
+  const handleChooseAddress = async (address) => {
+    try {
+      const response = await axios.patch(
+        `http://localhost:8000/address/${address.id}`,
+      );
+      Swal.fire({
+        title: 'Update Success!',
+        text: 'you successfully updated your current Address',
+        icon: 'success',
+      });
+      setCurrentCity(address.city);
+    } catch (error) {
+      Swal.fire({
+        icon: 'error',
+        title: 'Oops...',
+        text: 'Failed to update address!',
+      });
+    }
+  };
 
   const handleClick = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget);
   };
+  const handleAddressClick = (event: React.MouseEvent<HTMLElement>) => {
+    setAnchorAddress(event.currentTarget);
+  };
+
   const handleLogout = () => {
     dispatch(functionLogout());
   };
   const handleClose = () => {
     setAnchorEl(null);
+  };
+  const handleAddressClose = () => {
+    setAnchorAddress(null);
   };
 
   const handleDrawerOpen = () => {
@@ -71,13 +125,49 @@ export default function Navbar() {
   return (
     <nav className="flex justify-between p-3 bg-[#48744D]">
       <div className="flex gap-5">
-        <Image src="/vercel.svg" width={50} height={50} />{' '}
+        <Link href="/">
+          <Image src="/logo.png" width={50} height={50} />
+        </Link>
         <div className="flex flex-col text-white">
           <div className="flex">
-            <p>Dikirimkan ke jakarta</p>
+            <p>Dikirimkan ke {currentCity ? currentCity : 'Loading...'}</p>
+            <Box
+              sx={{
+                display: 'flex-end',
+                alignItems: 'center',
+                textAlign: 'center',
+              }}
+            >
+              <Tooltip title="Account settings">
+                <IconButton
+                  onClick={handleAddressClick}
+                  size="small"
+                  sx={{ ml: 2 }}
+                  aria-controls={openAddress ? 'address-menu' : undefined}
+                  aria-haspopup="true"
+                  aria-expanded={openAddress ? 'true' : undefined}
+                ></IconButton>
+              </Tooltip>
+            </Box>
+            <Menu
+              anchorEl={anchorAddress}
+              id="address-menu"
+              open={openAddress}
+              onClose={handleAddressClose}
+              onClick={handleAddressClose}
+              transformOrigin={{ horizontal: 'right', vertical: 'top' }}
+              anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
+            >
+              {userAddresses.map((address) => (
+                <Link href="/" key={address.id}>
+                  <MenuItem onClick={() => handleChooseAddress(address)}>
+                    {address.streetName}
+                  </MenuItem>
+                </Link>
+              ))}
+            </Menu>
             <IoIosArrowDown className="ml-1 mt-1" />
           </div>
-          <p>Hari ini 07:00-08:00</p>
         </div>
       </div>
       {!userSelector?.id ? (
@@ -106,7 +196,10 @@ export default function Navbar() {
                   aria-haspopup="true"
                   aria-expanded={open ? 'true' : undefined}
                 >
-                  <Avatar sx={{ width: 32, height: 32 }}>M</Avatar>
+                  <Avatar
+                    sx={{ width: 32, height: 32 }}
+                    src={`http://localhost:8000/${userSelector?.avatarURL}`}
+                  />
                 </IconButton>
               </Tooltip>
             </Box>
@@ -151,9 +244,12 @@ export default function Navbar() {
                   <Avatar /> Profile
                 </MenuItem>
               </Link>
-              <MenuItem onClick={handleClose}>
-                <Avatar /> My account
-              </MenuItem>
+              <Link href="/orders">
+                <MenuItem onClick={handleClose}>
+                  <Avatar /> My Orders
+                </MenuItem>
+              </Link>
+
               <Divider />
               <MenuItem onClick={handleLogout}>
                 <ListItemIcon>
@@ -174,7 +270,7 @@ export default function Navbar() {
           >
             <div style={{ width: 250 }}>
               {/* Drawer content */}
-              <h2>Cart</h2>
+              <h1 className="text-xl font-bold">Cart</h1>
               {cartItems ? (
                 cartItems.map((item) => (
                   <CartItem key={item.products.id} item={item} />
@@ -189,11 +285,15 @@ export default function Navbar() {
                 <CloseIcon />
               </IconButton>
             </div>
-            <div>
-              <Link href="http://localhost:3000/transaction">
-                <Button variant="contained">Go To Transaction</Button>
-              </Link>
-            </div>
+            {cartItems.length > 0 ? (
+              <div>
+                <Link href="http://localhost:3000/transaction">
+                  <Button variant="contained">Go To Transaction</Button>
+                </Link>
+              </div>
+            ) : (
+              <h1>Add Product to Cart</h1>
+            )}
           </Drawer>
         </div>
       )}

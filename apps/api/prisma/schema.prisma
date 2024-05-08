@@ -139,13 +139,16 @@ model Orders {
   status       Orders_status  @default(paymentPending)
   createdAt    DateTime       @default(now())
   deliveredAt  DateTime?
-  addressId     String?        @db.VarChar(255) // New field for addressId
-  address       Addresses?     @relation(fields: [addressId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  addressId    String?        @db.VarChar(255) // New field for addressId
+  address      Addresses?     @relation(fields: [addressId], references: [id], onDelete: NoAction, onUpdate: NoAction)
   users        Users          @relation(fields: [userId], references: [id], onDelete: NoAction, onUpdate: NoAction)
   stores       Stores         @relation(fields: [storeId], references: [id], onDelete: NoAction, onUpdate: NoAction)
   orderDetails OrderDetails[]
   stockHistory StockHistory[]
+  ImageUrl     String?        @default("") 
+  total        Decimal?       
 }
+
 
 model OrderDetails {
   id      String  @unique @db.VarChar(255)

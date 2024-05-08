@@ -1,12 +1,12 @@
 import { useEffect, useState } from 'react';
 import CartList from './components/CartList';
-import Price from './components/Price';
+import CartWeight from './components/CartWeight';
+import AddressTransaction from './components/AddressTransaction';
 
 const page = () => {
   return (
     <>
       <CartList />
-      {/* <Price /> */}
     </>
   );
 };

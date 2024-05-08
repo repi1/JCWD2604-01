@@ -44,7 +44,10 @@ app.use('/sales', routes.salesReportRoutes);
 app.use('/profile', routes.profileRoutes);
 app.use('/cart', routes.cartRoutes);
 app.use('/address', routes.addressRoutes);
-app.use('/order', routes.cartRoutes);
+app.use('/order', routes.orderRoutes);
+app.use('/kurir', routes.kurirRoutes);
+app.use('/store', routes.storeRoutes);
+
 app.use(express.static(path.join(__dirname, 'images')));
 
 app.use((error: Error, req: Request, res: Response, next: NextFunction) => {

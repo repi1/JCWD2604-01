@@ -9,7 +9,8 @@ import { route as profileRoutes } from './profile';
 import { route as cartRoutes } from './cart';
 import { route as addressRoutes } from './address';
 import { route as orderRoutes } from './orders';
-// import { route as transactionRoutes } from './transaction';
+import { route as kurirRoutes } from './kurir';
+import { route as storeRoutes } from './store';
 
 export const routes = {
   userRoutes,
@@ -22,6 +23,6 @@ export const routes = {
   cartRoutes,
   addressRoutes,
   orderRoutes,
-
-  // transactionRoutes,
+  kurirRoutes,
+  storeRoutes,
 };
