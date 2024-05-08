@@ -11,12 +11,15 @@ import { route as addressRoutes } from './address';
 import { route as orderRoutes } from './orders';
 import { route as kurirRoutes } from './kurir';
 import { route as storeRoutes } from './store';
+import { route as stocksRoutes } from './stocks';
+// import { route as transactionRoutes } from './transaction';
 
 export const routes = {
   userRoutes,
   productRoutes,
   productPhotosRoutes,
   categoryRoutes,
+  stocksRoutes,
   summarryRoutes,
   salesReportRoutes,
   profileRoutes,

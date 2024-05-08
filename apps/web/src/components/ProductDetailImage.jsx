@@ -1,6 +1,7 @@
 'use client';
 import { useState, useEffect } from 'react';
 import { axiosInstance, axiosInstanceSSR } from '@/axios/axios';
+import Image from 'next/image';
 
 function ProductDetailImage({ params }) {
   const { productId } = params;
@@ -19,24 +20,33 @@ function ProductDetailImage({ params }) {
   const [image, setImage] = useState('');
   useEffect(() => {
     if (product) {
-      setImage(product.productPhotos[0].photoURL);
+      setImage(`/product-image/${product.productPhotos[0].photoURL}`);
     }
   }, [product]);
+  console.log(image);
 
   return (
     <div className="grid sm:bg-transparent lg:bg-orange-200 justify-center rounded-lg">
       <div>
-        <img src={image} className="h-80 w-80 object-cover mt-4" />
+        <Image
+          src={image}
+          alt="thumbnail"
+          width="100"
+          height="100"
+          className="h-80 w-80 object-cover mt-4"
+        />
       </div>
       <div className="flex gap-2 m-0 my-2 lg:mx-2">
         {product &&
           product.productPhotos.map((val, key) => (
-            <img
+            <Image
               key={key}
-              src={val.photoURL}
+              src={`/product-image/${val.photoURL}`}
+              width="100"
+              height="100"
               alt={`${product.name} photo ${key + 1}`}
               className="h-20 w-1/4 object-cover cursor-pointer rounded-md"
-              onClick={() => setImage(val.photoURL)}
+              onClick={() => setImage(`/product-image/${val.photoURL}`)}
             />
           ))}
       </div>

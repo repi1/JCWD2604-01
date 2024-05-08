@@ -18,6 +18,7 @@ import ButtonBase from '@mui/material/ButtonBase';
 import TrendingUpIcon from '@mui/icons-material/TrendingUp';
 import { AccessTime, ExitToApp, SupervisorAccount } from '@mui/icons-material';
 import { functionLogout } from '@/redux/slices/userSlice';
+import { FaStore } from 'react-icons/fa6';
 
 const drawerWidth = 240;
 const link = [
@@ -39,6 +40,12 @@ const link = [
     route: '/admin/sales-report',
     name: 'Sales Report',
     icon: <TrendingUpIcon />,
+  },
+  {
+    id: 5,
+    route: '/admin/stores',
+    name: 'Stores',
+    icon: <FaStore />,
   },
 ];
 export default function Sidebar({ handleDrawerToggle }) {

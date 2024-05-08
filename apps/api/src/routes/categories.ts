@@ -10,10 +10,5 @@ route.post(
   '/',
   //   verifyUser,
   //   verifyAdmin,
-  //   fileUploader({
-  //     destinationFolder: "/images/event_images",
-  //     prefix: "PRODUCT",
-  //     filetype: "image",
-  //   }).single("image"),
   categoryController.createCategories,
 );

@@ -5,6 +5,21 @@ import { prisma } from '..';
 import { uploadedFile } from '../middlewares/multer';
 
 export const productPhotosController = {
+  async getProductPhotos(req: Request, res: Response, next: NextFunction) {
+    try {
+      const productPhotos = await prisma.productPhotos.findMany({
+        where: {
+          productId: String(req.params.id).toLowerCase(),
+        },
+      });
+      res.send({
+        success: true,
+        result: productPhotos,
+      });
+    } catch (error) {
+      next(error);
+    }
+  },
   async createProductPhotos(req: Request, res: Response, next: NextFunction) {
     try {
       const { id, productId } = req.body;

@@ -6,17 +6,28 @@ import { v4 as uuidv4 } from 'uuid';
 export const productController = {
   async getProducts(req: Request, res: Response, next: NextFunction) {
     try {
-      const { name, category_name } = req.query;
+      const { name, category_name, storeId } = req.query;
       const products = await prisma.products.findMany({
         include: {
           categories: {
             select: {
+              id: true,
               name: true,
             },
           },
           productPhotos: {
             select: {
               photoURL: true,
+            },
+          },
+          stocks: {
+            select: {
+              id: true,
+              stock: true,
+              storeId: true,
+            },
+            where: {
+              storeId: String(storeId),
             },
           },
         },
@@ -39,16 +50,28 @@ export const productController = {
   },
   async getProductById(req: Request, res: Response, next: NextFunction) {
     try {
+      const { storeId } = req.query;
       const products = await prisma.products.findUnique({
         include: {
           categories: {
             select: {
+              id: true,
               name: true,
             },
           },
           productPhotos: {
             select: {
               photoURL: true,
+            },
+          },
+          stocks: {
+            select: {
+              id: true,
+              stock: true,
+              storeId: true,
+            },
+            where: {
+              storeId: String(storeId),
             },
           },
         },
@@ -66,7 +89,7 @@ export const productController = {
   },
   async createProducts(req: Request, res: Response, next: NextFunction) {
     try {
-      const { name, price, weight, categoryId } = req.body;
+      const { name, price, weight, categoryId, storeId, stock } = req.body;
 
       const newProduct: Prisma.ProductsCreateInput = {
         name: String(name),
@@ -78,10 +101,37 @@ export const productController = {
           },
         },
       };
-
-      await prisma.products.create({
-        data: newProduct,
+      const existingProduct = await prisma.products.findFirst({
+        where: {
+          name: String(name),
+        },
       });
+      const product = existingProduct
+        ? existingProduct
+        : await prisma.products.create({
+            data: newProduct,
+          });
+
+      // Create a stock item for the specified store
+      if (storeId) {
+        const newStock: Prisma.StocksCreateInput = {
+          id: uuidv4(),
+          products: {
+            connect: {
+              id: product.id,
+            },
+          },
+          stores: {
+            connect: {
+              id: storeId,
+            },
+          },
+          stock: Number(stock),
+        };
+        await prisma.stocks.create({
+          data: newStock,
+        });
+      }
 
       res.send({
         success: true,
@@ -97,8 +147,8 @@ export const productController = {
 
       const editedEvent: Prisma.ProductsUpdateInput = {
         name: String(name),
-        price: parseFloat(price),
-        weight: parseFloat(weight),
+        price: Number(price),
+        weight: Number(weight),
         categories: {
           connect: {
             id: String(categoryId),
