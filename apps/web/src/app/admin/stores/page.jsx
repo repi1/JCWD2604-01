@@ -161,16 +161,7 @@ export function ProductCard({
               />
             </div>
             <div className="text-sm text-black font-normal flex gap-1">
-              Stock:
-              <input
-                className="text-sm text-black font-normal w-full"
-                type="number"
-                id="stock"
-                min="0"
-                max="100"
-                placeholder={stocks[0].stock}
-                value={stocks[0].stock}
-              />
+              Stock: {stocks[0].stock}
             </div>
             <select id="category">
               {categ.map((category) => (

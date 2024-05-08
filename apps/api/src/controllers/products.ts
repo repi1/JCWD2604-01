@@ -49,10 +49,12 @@ export const productController = {
   },
   async getProductById(req: Request, res: Response, next: NextFunction) {
     try {
+      const { storeId } = req.query;
       const products = await prisma.products.findUnique({
         include: {
           categories: {
             select: {
+              id: true,
               name: true,
             },
           },
@@ -64,6 +66,10 @@ export const productController = {
           stocks: {
             select: {
               stock: true,
+              storeId: true,
+            },
+            where: {
+              storeId: String(storeId),
             },
           },
         },
