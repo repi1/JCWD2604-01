@@ -37,7 +37,10 @@ const CartWeight = ({ productTotal }) => {
 
   return (
     <div>
-      <h1>Cart Weight: {cartWeight}</h1>
+      <div className="border-b border-gray-500 mb-2 pb-2">
+        <h1 className="mt-4 font-bold">Total Price: {productTotal}</h1>
+        <h1>Cart Weight: {cartWeight}</h1>
+      </div>
       <AddressTransaction weight={cartWeight} productTotal={productTotal} />
     </div>
   );

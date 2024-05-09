@@ -1,29 +1,27 @@
 'use client';
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import OrderItem from './OrderItem';
 import { useSelector } from 'react-redux';
 import Box from '@mui/material/Box';
 import InputLabel from '@mui/material/InputLabel';
 import MenuItem from '@mui/material/MenuItem';
 import FormControl from '@mui/material/FormControl';
 import Select, { SelectChangeEvent } from '@mui/material/Select';
+import OrderItem from '@/app/orders/components/OrderItem';
+import OrderSummary from './OrderSummary';
 
-const OrderList = () => {
+export default function OrderManagement() {
   const [orderList, setOrderList] = useState([]);
   const [sort, setSort] = React.useState('');
 
   const handleChange = (event: SelectChangeEvent) => {
     setSort(event.target.value as string);
   };
-  const userSelector = useSelector((state) => state.auth);
 
   useEffect(() => {
     const fetchOrder = async () => {
       try {
-        const response = await axios.get(
-          `http://localhost:8000/order/${userSelector?.id}`,
-        );
+        const response = await axios.get(`http://localhost:8000/order`);
         const orderData = response.data;
         if (sort === 'date latest') {
           orderData.sort(
@@ -50,32 +48,32 @@ const OrderList = () => {
     return () => {};
   }, [orderList, sort]);
   return (
-    <>
-      <div className="m-4">
-        <FormControl fullWidth>
-          <InputLabel id="demo-simple-select-label">Sort By</InputLabel>
-          <Select
-            labelId="demo-simple-select-label"
-            id="demo-simple-select"
-            value={sort}
-            label="Sort By"
-            onChange={handleChange}
-          >
-            <MenuItem value="date latest">Date latest</MenuItem>
-            <MenuItem value="date oldest">Date oldest</MenuItem>
-            <MenuItem value="price highest">price highest</MenuItem>
-            <MenuItem value="price lowest">price lowest</MenuItem>
-          </Select>
-        </FormControl>
-      </div>
+    <div>
+      <>
+        <div className="m-4">
+          <FormControl fullWidth>
+            <InputLabel id="demo-simple-select-label">Sort By</InputLabel>
+            <Select
+              labelId="demo-simple-select-label"
+              id="demo-simple-select"
+              value={sort}
+              label="Sort By"
+              onChange={handleChange}
+            >
+              <MenuItem value="date latest">Date latest</MenuItem>
+              <MenuItem value="date oldest">Date oldest</MenuItem>
+              <MenuItem value="price highest">price highest</MenuItem>
+              <MenuItem value="price lowest">price lowest</MenuItem>
+            </Select>
+          </FormControl>
+        </div>
 
-      <div>
-        {orderList.map((order) => (
-          <OrderItem order={order} key={order.id} />
-        ))}
-      </div>
-    </>
+        <div>
+          {orderList.map((order) => (
+            <OrderSummary key={order.id} order={order} />
+          ))}
+        </div>
+      </>
+    </div>
   );
-};
-
-export default OrderList;
+}

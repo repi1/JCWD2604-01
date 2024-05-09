@@ -6,13 +6,21 @@ import { v4 as uuidv4 } from 'uuid';
 
 export const orderController = {
   async getAllOrder(req: Request, res: Response, next: NextFunction) {
-    // try {
-    // } catch (error) {
-    //   console.error('Error fetching cart items:', error);
-    //   res.status(500).json({ error: 'Failed to fetch cart items' });
-    // } finally {
-    //   await prisma.$disconnect();
-    // }
+    try {
+      const orders = await prisma.orders.findMany({
+        include: {
+          users: true,
+          stores: true,
+          address: true,
+        },
+      });
+      res.status(200).json(orders);
+    } catch (error) {
+      console.error('Error fetching Orders', error);
+      res.status(500).json({ error: 'Failed to fetch Orders' });
+    } finally {
+      await prisma.$disconnect();
+    }
   },
 
   async getUserOrder(req: Request, res: Response, next: NextFunction) {

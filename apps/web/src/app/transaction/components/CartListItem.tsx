@@ -14,7 +14,7 @@ const CartListItem = ({ item, onPriceUpdate }) => {
   }, []);
 
   return (
-    <div className="flex flex-col justify-between border border-lightblue rounded-xl p-4 shadow-md">
+    <div className="flex flex-col justify-between border border-lightblue rounded-xl p-4 shadow-md mr-4">
       <div className="flex items-center justify-between mb-4">
         <div className="flex-shrink-0">
           <Image src={imageUrl} height={100} width={100} alt="product image" />

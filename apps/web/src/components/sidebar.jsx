@@ -19,6 +19,7 @@ import TrendingUpIcon from '@mui/icons-material/TrendingUp';
 import { AccessTime, ExitToApp, SupervisorAccount } from '@mui/icons-material';
 import { functionLogout } from '@/redux/slices/userSlice';
 import { FaStore } from 'react-icons/fa6';
+import { IoNewspaperOutline } from 'react-icons/io5';
 
 const drawerWidth = 240;
 const link = [
@@ -46,6 +47,12 @@ const link = [
     route: '/admin/stores',
     name: 'Stores',
     icon: <FaStore />,
+  },
+  {
+    id: 6,
+    route: '/admin/manage-order',
+    name: 'Orders',
+    icon: <IoNewspaperOutline />,
   },
 ];
 export default function Sidebar({ handleDrawerToggle }) {
