@@ -32,7 +32,7 @@ const OrderItem = ({ order }) => {
       setImageUrl(uploadedImageUrl);
       setImageClick(false);
       const update = await axios.patch(
-        `http://localhost:8000/order/${order.id}`,
+        `http://localhost:8000/order/paymentPending/${order.id}`,
       );
     } catch (error) {
       console.error('Error uploading image:', error);
@@ -52,6 +52,25 @@ const OrderItem = ({ order }) => {
       Swal.fire({
         icon: 'error',
         title: 'Failed to Delete Order',
+        text: 'Something went wrong!',
+      });
+      console.log(error);
+    }
+  }
+  async function confirmOrder() {
+    try {
+      const response = await axios.patch(
+        `http://localhost:8000/order/delivered/${order.id}`,
+      );
+      Swal.fire({
+        title: 'Good job!',
+        text: 'Order Confirmed',
+        icon: 'success',
+      });
+    } catch (error) {
+      Swal.fire({
+        icon: 'error',
+        title: 'Failed to Confirm Order',
         text: 'Something went wrong!',
       });
       console.log(error);
@@ -99,6 +118,19 @@ const OrderItem = ({ order }) => {
           )}
         </div>
       )}
+      {order.status == 'delivered' && (
+        <div className="flex gap-5 mt-4">
+          <Button
+            variant="contained"
+            disableElevation
+            color="error"
+            onClick={confirmOrder}
+          >
+            Confirm Delivery
+          </Button>
+        </div>
+      )}
+
       {imageClick && (
         <div className="flex flex-col items-center justify-center gap-4 mt-8">
           <form encType="multipart/form-data" onSubmit={imageSubmit}>
