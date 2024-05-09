@@ -22,4 +22,11 @@ route.post(
   orderController.uploadPicture,
 );
 
-route.patch('/:orderId', orderController.updateAfterUpload);
+route.patch('/paymentPending/:orderId', orderController.updateAfterUpload);
+route.patch(
+  '/paymentConfirmation/:orderId',
+  orderController.updateToProcessing,
+);
+
+route.patch('/processing/:orderId', orderController.updateToDelivering);
+route.patch('/delivered/:orderId', orderController.updateToDeliveryDone);

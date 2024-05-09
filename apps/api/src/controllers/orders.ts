@@ -164,4 +164,40 @@ export const orderController = {
       res.status(500).json({ error: 'Internal server error' });
     }
   },
+  async updateToProcessing(req: Request, res: Response, next: NextFunction) {
+    try {
+      const orderId = req.params.orderId;
+      const updateUpload = await prisma.orders.update({
+        where: { id: orderId },
+        data: { status: 'processing' },
+      });
+    } catch (error) {
+      console.error('Error updating order:', error);
+      res.status(500).json({ error: 'Internal server error' });
+    }
+  },
+  async updateToDelivering(req: Request, res: Response, next: NextFunction) {
+    try {
+      const orderId = req.params.orderId;
+      const updateUpload = await prisma.orders.update({
+        where: { id: orderId },
+        data: { status: 'delivered' },
+      });
+    } catch (error) {
+      console.error('Error updating order:', error);
+      res.status(500).json({ error: 'Internal server error' });
+    }
+  },
+  async updateToDeliveryDone(req: Request, res: Response, next: NextFunction) {
+    try {
+      const orderId = req.params.orderId;
+      const updateUpload = await prisma.orders.update({
+        where: { id: orderId },
+        data: { status: 'deliveryDone' },
+      });
+    } catch (error) {
+      console.error('Error updating order:', error);
+      res.status(500).json({ error: 'Internal server error' });
+    }
+  },
 };
