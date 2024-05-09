@@ -94,7 +94,11 @@ export function ProductCard({ id, name, price, productPhotos, categories }) {
       >
         <div className="">
           <Image
-            src={`/product-image/${productPhotos[0].photoURL}`}
+            src={
+              productPhotos?.[0]?.photoURL
+                ? `/product-image/${productPhotos[0].photoURL}`
+                : '/product-image/default-image.jpg'
+            }
             className="h-[200px] w-full object-cover rounded-xl"
             alt=""
             width={30}

@@ -26,8 +26,8 @@ export const stocksController = {
 
       const newStock: Prisma.StocksCreateInput = {
         id: uuidv4(),
-        products: { connect: { id: productId } },
-        stores: { connect: { id: storeId } },
+        products: { connect: { id: String(productId) } },
+        stores: { connect: { id: String(storeId) } },
         stock: Number(stock),
       };
 
@@ -36,7 +36,7 @@ export const stocksController = {
       });
       res.send({
         success: true,
-        message: 'data berhasil diedit',
+        message: 'Stock berhasil dibuat',
       });
     } catch (error) {
       next(error);
@@ -44,7 +44,7 @@ export const stocksController = {
   },
   async updateStocks(req: Request, res: Response, next: NextFunction) {
     try {
-      const { stock, id } = req.body;
+      const { stock } = req.body;
 
       const editedStock: Prisma.StocksUpdateInput = {
         stock: Number(stock),
@@ -53,12 +53,27 @@ export const stocksController = {
       await prisma.stocks.update({
         data: editedStock,
         where: {
-          id: String(id),
+          id: String(req.params.id),
         },
       });
       res.send({
         success: true,
-        message: 'data berhasil diedit',
+        message: 'Stock berhasil diedit',
+      });
+    } catch (error) {
+      next(error);
+    }
+  },
+  async deleteStocks(req: Request, res: Response, next: NextFunction) {
+    try {
+      await prisma.stocks.delete({
+        where: {
+          id: String(req.params.id),
+        },
+      });
+      res.send({
+        success: true,
+        message: 'Stock berhasil dihapus',
       });
     } catch (error) {
       next(error);

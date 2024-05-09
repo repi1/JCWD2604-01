@@ -3,6 +3,7 @@ import { Request, Response, NextFunction } from 'express';
 import { Prisma } from '@prisma/client';
 import { prisma } from '..';
 import { uploadedFile } from '../middlewares/multer';
+import { v4 as uuidv4 } from 'uuid';
 
 export const productPhotosController = {
   async getProductPhotos(req: Request, res: Response, next: NextFunction) {
@@ -22,17 +23,29 @@ export const productPhotosController = {
   },
   async createProductPhotos(req: Request, res: Response, next: NextFunction) {
     try {
-      const { id, productId } = req.body;
-
-      // Check if req.files is an array before calling map()
-      const photos =
-        req.files && Array.isArray(req.files)
-          ? req.files.map((file: uploadedFile) => ({
-              id: String(id),
-              productId: String(productId),
+      const productId = req.params.id;
+      const photoArr =
+        req.file?.filename && Array.isArray(req.file)
+          ? req.file.map((file) => ({
               photoURL: file.filename,
             }))
-          : []; // Empty array if req.files is not an array or undefined
+          : { photoURL: req.file?.filename };
+
+      const photos: Prisma.ProductPhotosCreateManyInput[] = Array.isArray(
+        photoArr,
+      )
+        ? photoArr.map((photo) => ({
+            id: uuidv4(),
+            productId: String(productId),
+            photoURL: photo.photoURL,
+          }))
+        : [
+            {
+              id: uuidv4(),
+              productId: String(productId),
+              photoURL: photoArr.photoURL,
+            },
+          ];
 
       await prisma.productPhotos.createMany({ data: photos });
       res.send({
