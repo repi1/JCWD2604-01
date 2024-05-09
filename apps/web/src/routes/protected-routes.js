@@ -23,11 +23,12 @@ const routes = [];
 routes.push(new Route('/auth/login', guestOnly));
 routes.push(new Route('/auth/register', guestOnly));
 routes.push(new Route('/auth/forgot-password', guestOnly));
-routes.push(new Route('/admin/dashboard', adminOnly));
-routes.push(new Route('/admin/promotion', adminOnly));
-routes.push(new Route('/admin/transaction', adminOnly));
-routes.push(new Route('/transactions', needLogin));
+routes.push(new Route('/auth/change-password', needLogin));
+routes.push(new Route('/admin', adminOnly));
+routes.push(new Route('/transaction', needLogin));
+routes.push(new Route('/profile', needLogin));
 routes.push(new Route('/history', needLogin));
+routes.push(new Route('/orders', needLogin));
 
 export default function ProtectedPage({ children }) {
   const userSelector = useSelector((state) => state.auth);
@@ -36,13 +37,29 @@ export default function ProtectedPage({ children }) {
 
   useEffect(() => {
     const checkRoute = routes.find((route) => pathname.includes(route.path));
-    if (checkRoute?.type == adminOnly && userSelector.role != 'admin')
+    if (
+      checkRoute?.type == adminOnly &&
+      userSelector.role != 'storeAdmin' &&
+      userSelector.role != 'superAdmin'
+    ) {
+      localStorage.setItem('path', pathname);
+
       return redirect('/auth/login');
-    else if (checkRoute?.type == needLogin && !userSelector.email)
+    } else if (checkRoute?.type == needLogin && !userSelector.email) {
+      localStorage.setItem('path', pathname);
       return redirect('/auth/login');
-    else if (checkRoute?.type == guestOnly && userSelector.email)
-      return redirect('/');
-    else
+    } else if (checkRoute?.type == guestOnly && userSelector.email) {
+      const path = localStorage.getItem('path');
+      if (!userSelector.role.includes('Admin')) {
+        if (path) {
+          localStorage.removeItem('path');
+          return redirect(path);
+        }
+        return redirect('/');
+      }
+
+      return redirect('/admin');
+    } else
       setTimeout(() => {
         setIsLoading(false);
       }, 500);

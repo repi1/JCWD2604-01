@@ -7,7 +7,7 @@ generator client {
 
 datasource db {
   provider = "mysql"
-  url      = env("DATABASE_URL")
+  url = env("DATABASE_URL")
 }
 
 enum Users_role {
@@ -31,6 +31,7 @@ model Users {
   birthDate    DateTime
   avatarURL    String?        @db.VarChar(255)
   role         Users_role     @default(user)
+  storeId      String?        
   isVerified   Boolean        @default(false)
   isReset      Boolean        @default(false)
   createdAt    DateTime       @default(now())
@@ -38,29 +39,22 @@ model Users {
   carts        Carts[]
   orders       Orders[]
   userVouchers UserVouchers[]
-  Stores       Stores[]
+  store        Stores?         @relation(fields: [storeId], references: [id], onDelete: NoAction, onUpdate: NoAction)
 }
 
 model Addresses {
   id         String @unique @db.VarChar(255)
   userId     String @db.VarChar(255)
-  streetName String @db.VarChar(255)
-  cityId     String @db.VarChar(255)
+  streetName String @db.VarChar(255) 
+  city        String @db.VarChar(255) @default(",")
   longitude  String @db.VarChar(255)
   latitude   String @db.VarChar(255)
+  isActive  Boolean @default(true)
   users      Users  @relation(fields: [userId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  orders        Orders[]
 }
 
-model Province {
-  id           String @unique @db.VarChar(255)
-  provinceName String @db.VarChar(255)
-}
 
-model City {
-  id         String @unique @db.VarChar(255)
-  cityName   String @db.VarChar(255)
-  provinceId String @db.VarChar(255)
-}
 
 model Kurir {
   id        String @unique @db.VarChar(255)
@@ -68,10 +62,11 @@ model Kurir {
 }
 
 model Products {
-  id            String          @unique @db.VarChar(255)
-  name          String          @db.VarChar(255)
+  id            String          @unique @default(uuid()) @db.VarChar(255)
+  name          String          @unique @db.VarChar(255)
   price         Decimal         @db.Decimal(18, 2)
   categoryId    String          @db.VarChar(255)
+  weight        Decimal         @db.Decimal(18, 2)
   productPhotos ProductPhotos[]
   categories    Categories      @relation(fields: [categoryId], references: [id], onDelete: NoAction, onUpdate: NoAction)
   stocks        Stocks[]
@@ -95,12 +90,11 @@ model ProductPhotos {
 model Stores {
   id         String   @unique @db.VarChar(255)
   name       String   @db.VarChar(255)
-  userId     String   @db.VarChar(255)
   streetName String   @db.VarChar(255)
-  cityId     String   @db.VarChar(255)
+  city     String   @db.VarChar(255) @default(",")
   longitude  String   @db.VarChar(255)
   latitude   String   @db.VarChar(255)
-  users      Users    @relation(fields: [userId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  users      Users[]
   stocks     Stocks[]
   orders     Orders[]
 }
@@ -143,15 +137,18 @@ model Orders {
   userId       String         @db.VarChar(255)
   storeId      String         @db.VarChar(255)
   status       Orders_status  @default(paymentPending)
-  createdAt    DateTime
-  deliveredAt  DateTime
-  streetName   String         @db.VarChar(255)
-  cityId       String         @db.VarChar(255)
+  createdAt    DateTime       @default(now())
+  deliveredAt  DateTime?
+  addressId    String?        @db.VarChar(255) // New field for addressId
+  address      Addresses?     @relation(fields: [addressId], references: [id], onDelete: NoAction, onUpdate: NoAction)
   users        Users          @relation(fields: [userId], references: [id], onDelete: NoAction, onUpdate: NoAction)
   stores       Stores         @relation(fields: [storeId], references: [id], onDelete: NoAction, onUpdate: NoAction)
   orderDetails OrderDetails[]
   stockHistory StockHistory[]
+  ImageUrl     String?        @default("") 
+  total        Decimal?       
 }
+
 
 model OrderDetails {
   id      String  @unique @db.VarChar(255)
@@ -170,12 +167,13 @@ enum StockHistory_status {
 
 model StockHistory {
   id        String              @unique @db.VarChar(255)
-  orderId   String              @db.VarChar(255)
+  orderId   String?             @db.VarChar(255)
   stockId   String              @db.VarChar(255)
   status    StockHistory_status
-  createdAt DateTime
+  createdAt DateTime            @default(now())
   qty       Decimal             @db.Decimal(18, 2)
-  orders    Orders              @relation(fields: [orderId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  note      String?
+  orders    Orders?             @relation(fields: [orderId], references: [id], onDelete: NoAction, onUpdate: NoAction)
   stocks    Stocks              @relation(fields: [stockId], references: [id], onDelete: NoAction, onUpdate: NoAction)
 }
 

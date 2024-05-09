@@ -28,6 +28,7 @@ export const loginController = {
         birthDate: user.birthDate,
         role: user.role,
         avatarUrl: user.avatarURL,
+        storeId: user.storeId,
       };
       if (checkPassword) {
         const token = sign(resUser, secretKey, {
@@ -40,7 +41,7 @@ export const loginController = {
           token,
         });
       }
-      throw Error('email/password not valid');
+      throw Error('invalid email/password');
     } catch (error) {
       next(error);
     }
@@ -61,6 +62,7 @@ export const loginController = {
           birthDate: true,
           role: true,
           avatarURL: true,
+          storeId: true,
         },
         where: {
           email: verifyUser.email,

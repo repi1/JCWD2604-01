@@ -124,7 +124,7 @@ function PasswordChangerComponent({ token, isError, message }) {
           </div>
         </FormControl>
         <Button type="button" colorScheme={'facebook'} onClick={inputFormik}>
-          Change Password
+          Set Password
         </Button>
       </Flex>
     </>

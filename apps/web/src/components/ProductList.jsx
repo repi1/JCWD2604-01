@@ -3,6 +3,13 @@ import { useState, useEffect, useRef } from 'react';
 import { useDebounce } from 'use-debounce';
 import { axiosInstance } from '../axios/axios';
 import Link from 'next/link';
+import Image from 'next/image';
+import Button from '@mui/material/Button';
+import Swal from 'sweetalert2';
+import QuantityInput from './QuantityInput';
+import axios from 'axios';
+import { useSelector } from 'react-redux';
+import CardMedia from '@mui/material/CardMedia';
 
 export function ProductList() {
   const [search, setSearch] = useState('');
@@ -12,7 +19,7 @@ export function ProductList() {
 
   function fetchProducts() {
     axiosInstance()
-      .get('/products/', {
+      .get('/products', {
         params: {
           name: search,
           category_name: category,
@@ -85,17 +92,61 @@ export function ProductList() {
 }
 
 export function ProductCard({ id, name, price, productPhotos, categories }) {
+  const [quantity, setQuantity] = useState(1);
+  const userSelector = useSelector((state) => state.auth);
+
+  async function addToCart() {
+    try {
+      // console.log(id);
+      // console.log(quantity);
+      const postData = {
+        userId: userSelector.id,
+        productId: id,
+        quantity: quantity,
+      };
+      const response = await axios.post('http://localhost:8000/cart', postData);
+      Swal.fire({
+        title: 'Success!',
+        text: 'Add Product To cart!',
+        icon: 'success',
+      });
+    } catch (error) {
+      Swal.fire({
+        icon: 'error',
+        title: 'Failed',
+        text: 'Failed to Add to Cart',
+      });
+      console.log(error);
+    }
+  }
   return (
-    <>
-      <Link
-        className="flex flex-col bg-gray-100 rounded-xl shadow-lg"
-        href={'/products/' + id}
-      >
+    <div className='className="flex flex-col bg-gray-100 rounded-xl shadow-lg"'>
+      <Link href={'/products/' + id}>
         <div className="">
-          <img
-            src={productPhotos[0].photoURL}
+          {/* <Image
+            src={`/product-image/${productPhotos[0].photoURL}`}
+          <Image
+            src={
+              productPhotos?.[0]?.photoURL
+                ? `/product-image/${productPhotos[0].photoURL}`
+                : '/product-image/default-image.jpg'
+            }
             className="h-[200px] w-full object-cover rounded-xl"
             alt=""
+            width={30}
+            height={30}
+          /> */}
+          <CardMedia
+            component="img"
+            className="h-[200px] w-full object-cover rounded-xl"
+            alt={name}
+            width={30}
+            height={30}
+            image={
+              productPhotos?.[0]?.photoURL
+                ? `http://localhost:8000/${productPhotos[0].photoURL}`
+                : `/product-image/default-image.jpg`
+            }
           />
         </div>
         <div>
@@ -106,6 +157,14 @@ export function ProductCard({ id, name, price, productPhotos, categories }) {
           </div>
         </div>
       </Link>
-    </>
+      {userSelector.id && (
+        <div>
+          <QuantityInput onChange={setQuantity} />
+          <Button size="small" onClick={addToCart}>
+            Add To Cart
+          </Button>
+        </div>
+      )}
+    </div>
   );
 }
