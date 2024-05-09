@@ -4,9 +4,19 @@ import { prisma } from '..';
 import { v4 as uuidv4 } from 'uuid';
 
 export const productController = {
-  async getProducts(req: Request, res: Response, next: NextFunction) {
+  async getProducts(
+    req: Request,
+    res: Response,
+    next: NextFunction,
+    name: string = '',
+    category_name: string = '',
+  ) {
     try {
-      const { name, category_name, storeId } = req.query;
+      const {
+        name: queryName,
+        category_name: queryCategoryName,
+        storeId,
+      } = req.query;
       const products = await prisma.products.findMany({
         include: {
           categories: {
@@ -32,10 +42,12 @@ export const productController = {
           },
         },
         where: {
-          name: { contains: String(name).toLowerCase() },
+          name: { contains: String(queryName || name).toLowerCase() },
           categories: {
             name: {
-              contains: String(category_name).toLowerCase(),
+              contains: String(
+                queryCategoryName || category_name,
+              ).toLowerCase(),
             },
           },
         },
@@ -112,30 +124,10 @@ export const productController = {
             data: newProduct,
           });
 
-      // Create a stock item for the specified store
-      if (storeId) {
-        const newStock: Prisma.StocksCreateInput = {
-          id: uuidv4(),
-          products: {
-            connect: {
-              id: product.id,
-            },
-          },
-          stores: {
-            connect: {
-              id: storeId,
-            },
-          },
-          stock: Number(stock),
-        };
-        await prisma.stocks.create({
-          data: newStock,
-        });
-      }
-
       res.send({
         success: true,
         message: 'Produk berhasil ditambahkan',
+        productId: product.id,
       });
     } catch (error) {
       next(error);

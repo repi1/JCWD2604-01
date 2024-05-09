@@ -6,29 +6,6 @@ import { productController } from '../controllers/products';
 export const route: Router = express.Router();
 route.get('/', productController.getProducts);
 route.get('/:id', productController.getProductById);
-route.post(
-  '/',
-  //   verifyUser,
-  //   verifyAdmin,
-  // fileUploader({
-  //   prefix: 'PRODUCT',
-  //   filetype: 'image',
-  // }).array('image'),
-  productController.createProducts,
-);
-route.patch(
-  '/:id',
-  // verifyUser,
-  // verifyAdmin,
-  // fileUploader({
-  //   prefix: 'PRODUCT',
-  //   filetype: 'image',
-  // }).array('image'),
-  productController.updateProducts,
-);
-
-route.delete(
-  '/:id',
-  // verifyUser, verifyAdmin,
-  productController.deleteProduct,
-);
+route.post('/', productController.createProducts);
+route.patch('/:id', productController.updateProducts);
+route.delete('/:id', productController.deleteProduct);

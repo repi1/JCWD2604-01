@@ -1,17 +1,15 @@
 'use client';
 import { useState, useEffect, useRef } from 'react';
 import { useDebounce } from 'use-debounce';
-import { useFormik } from 'formik';
 import { axiosInstance } from '../../../axios/axios';
 import { useSelector } from 'react-redux';
-import Link from 'next/link';
 import Image from 'next/image';
+import CreateProductComponent from '../../../components/admin/CreateProductComponent';
 
 export function Page() {
   const [search, setSearch] = useState('');
   const [category, setCategory] = useState('');
   const [products, setProducts] = useState([]);
-  const [stocks, setStocks] = useState([]);
   const [value] = useDebounce(search, 500);
   const userSelector = useSelector((state) => state.auth);
 
@@ -48,19 +46,19 @@ export function Page() {
   }, []);
 
   return (
-    <div className="w-full bg-orange-100">
+    <div className="w-full bg-green-100">
       <div className=" pt-5 px-7 max-w-screen-2xl w-full">
         <div className="lg:flex grid justify-between">
           <div className="flex items-center gap-3  border-gray-300 border-b">
             <input
               type="search"
               placeholder="Search any products"
-              className=" outline-none bg-orange-100"
+              className=" outline-none bg-green-100"
               value={search}
               onChange={(e) => setSearch(e.target.value)}
             />
           </div>
-          <div className="mt-3 lg:mt-0 lg:ml-10 flex gap-5 items-start">
+          <div className="my-3 lg:mt-0 lg:ml-10 flex gap-5 items-start">
             <button
               onClick={(e) => setCategory(e.target.value)}
               value="Sayur"
@@ -93,6 +91,7 @@ export function Page() {
               All Category
             </button>
           </div>
+          <CreateProductComponent categ={categ} />
         </div>
       </div>
       <div className="grid max-w-screen-2xl w-full grid-cols-1 p-7 gap-3">
@@ -116,55 +115,68 @@ export function ProductCard({
   stocks,
 }) {
   const [name1, setName1] = useState(name);
+  const [valname] = useDebounce(name1, 500);
+
   const [price1, setPrice1] = useState(price);
+  const [valprice] = useDebounce(price1, 500);
+
   const [weight1, setWeight1] = useState(weight);
+  const [valweight] = useDebounce(weight1, 500);
+
   const [stock1, setStock1] = useState(stocks[0].stock);
+  const [valuestock] = useDebounce(stock1, 500);
+
   const [category1, setCategory1] = useState(categories.id);
 
   const edit = () => {
-    const patchData = {
-      name: name1,
-      price: price1,
-      weight: weight1,
-      stock: stock1,
-      category: category1,
-    };
-    axiosInstance()
-      .patch(`/products/${id}`, patchData) // Update product information
-      .then(() => {
-        alert('data berhasil diedit');
-        // Fetch updated product information
-        axiosInstance()
-          .get(`/products/${id}`)
-          .then((res) => {
-            const updatedProduct = res.data.result;
-            // Update stock information
-            const stockData = {
-              stock: patchData.stock,
-            };
-            axiosInstance()
-              .patch('/stocks', stockData, {
-                params: {
-                  id: stocks[0].id,
-                },
-              })
-              .then(() => {
-                // Handle successful stock update
-                console.log('Stock updated successfully');
-              })
-              .catch((err) => {
-                console.log(err);
-              });
-          })
-          .catch((err) => {
-            console.log(err);
-          });
-        // Reload the page
-        location.reload();
-      })
-      .catch((err) => {
-        console.log(err);
-      });
+    if (confirm('Are you sure you want to edit this product?')) {
+      axiosInstance()
+        .patch(`/products/${id}`, {
+          name: name1,
+          price: price1,
+          weight: weight1,
+          categoryId: category1,
+        }) // Update product information
+        .then(() => {
+          alert('Produk berhasil diedit');
+          axiosInstance()
+            .patch(`/stocks/${stocks[0].id}`, { stock: stock1 })
+            .then(() => {})
+            .catch((err) => {
+              console.log(err);
+            });
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    }
+  };
+  const remove = () => {
+    if (confirm('Are you sure you want to delete this product?')) {
+      axiosInstance()
+        .delete(`/stocks/${stocks[0].id}`)
+        .then(() => {
+          axiosInstance()
+            .delete(`/products/${id}`)
+            .then(() => {
+              alert('Produk berhasil didelete');
+              axiosInstance()
+                .patch(`/stocks/${stocks[0].id}`, { stock: stock1 })
+                .then(() => {
+                  location.reload();
+                })
+                .catch((err) => {
+                  console.log(err);
+                });
+            })
+            .catch((err) => {
+              console.log(err);
+            });
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    }
   };
 
   return (
@@ -172,7 +184,11 @@ export function ProductCard({
       <div className="flex h-60 bg-gray-100 rounded-xl shadow-lg">
         <div className="">
           <Image
-            src={`/product-image/${productPhotos[0].photoURL}`}
+            src={
+              productPhotos?.[0]?.photoURL
+                ? `/product-image/${productPhotos[0].photoURL}`
+                : '/product-image/default-image.jpg'
+            }
             className="h-full w-[256px] object-cover rounded-xl"
             alt=""
             width={30}
@@ -180,7 +196,10 @@ export function ProductCard({
           />
         </div>
         <div>
-          <form className="w-full h-full p-3 flex flex-col justify-between gap-2 ">
+          <form
+            className="w-full h-full p-3 flex flex-col justify-between gap-2 "
+            onSubmit={(e) => e.preventDefault()}
+          >
             <input
               className="text-2xl font-bold w-full"
               type="text"
@@ -231,12 +250,20 @@ export function ProductCard({
                 </option>
               ))}
             </select>
-            <button
-              className="bg-orange-500 hover:bg-orange-700 text-white font-bold py-2 px-4 rounded"
-              onClick={edit}
-            >
-              Edit Product
-            </button>
+            <div className="flex w-full justify-between">
+              <button
+                className="bg-orange-500 hover:bg-orange-700 text-white font-bold py-2 mr-4 rounded w-1/2"
+                onClick={edit}
+              >
+                Edit
+              </button>
+              <button
+                className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 ml-4 rounded w-1/2"
+                onClick={remove}
+              >
+                Delete
+              </button>
+            </div>
           </form>
         </div>
       </div>
