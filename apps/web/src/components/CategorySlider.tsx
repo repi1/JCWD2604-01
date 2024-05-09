@@ -26,12 +26,12 @@ const CategorySlider = () => {
         />
         <div
           id="slider"
-          className="w-full h-full overflow-x-scroll scroll whitespace-nowrap scroll-smooth scrollbar-hide "
+          className="lg:flex  w-full overflow-x-scroll scroll whitespace-nowrap scroll-smooth scrollbar-hide "
         >
           <div>
             {data.map((item) => (
               <div
-                className="w-[75px] inline-block p-2 cursor-pointer hover:scale-105 ease-in-out duration-300"
+                className="w-[75px] inline-block p-2 cursor-pointer hover:scale-105 ease-in-out duration-300 mr-4"
                 key={item.id}
               >
                 <div className="flex flex-col items-center ">
@@ -53,7 +53,7 @@ const CategorySlider = () => {
           <div>
             {data2.map((item) => (
               <div
-                className="w-[75px] inline-block p-2 cursor-pointer hover:scale-105 ease-in-out duration-300"
+                className="w-[75px] inline-block p-2 cursor-pointer hover:scale-105 ease-in-out duration-300 mr-4"
                 key={item.id}
               >
                 <div className="flex flex-col items-center ">

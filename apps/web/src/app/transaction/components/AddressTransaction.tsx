@@ -95,11 +95,14 @@ const AddressTransaction = ({ weight, productTotal }) => {
     <div>
       {closestStoreAddress && (
         <div>
-          <h1 className="text-xl font-bold">Destination:</h1>
-          <h1>{userActiveAddress.streetName}</h1>
+          <div className="border-b border-gray-500 mb-2 pb-2">
+            <h1 className="text-xl font-bold">Destination:</h1>
+            <h1>{userActiveAddress.streetName}</h1>
 
-          <h1 className="text-xl font-bold">Closest Store:</h1>
-          <h1>{closestStoreAddress.streetName}</h1>
+            <h1 className="text-xl font-bold">Closest Store:</h1>
+            <h1>{closestStoreAddress.streetName}</h1>
+          </div>
+
           <KurirCost
             userCity={userActiveAddress.city}
             storeCity={closestStoreAddress.city}

@@ -27,10 +27,10 @@ export const kurirController = {
       let userAddress = userCity;
       let storeAddress = storeCity;
 
-      if (userCity == 'Special Region of Jakarta') {
+      if (userCity == 'Special Region of Jakarta' || userCity == 'Jakarta') {
         userAddress = 'Jakarta Pusat';
       }
-      if (storeCity == 'Special Region of Jakarta') {
+      if (storeCity == 'Special Region of Jakarta' || storeCity == 'Jakarta') {
         storeAddress = 'Jakarta Pusat';
       }
 

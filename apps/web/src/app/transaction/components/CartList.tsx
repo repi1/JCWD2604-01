@@ -34,21 +34,24 @@ const CartList = () => {
   }, []);
 
   return (
-    <div className="ml-4 mt-4">
-      <h1 className="text-xl font-bold">Your Order: </h1>
-      {cartItems ? (
-        cartItems.map((item) => (
-          <CartListItem
-            key={item.products.id}
-            item={item}
-            onPriceUpdate={handlePriceUpdate}
-          />
-        ))
-      ) : (
-        <h1>No Items on Your cart</h1>
-      )}
-      <div>
-        <h1 className="mt-4 font-bold">Total Price: {totalPrices / 2}</h1>
+    <div className="lg:flex m-4">
+      <div className="lg:w-1/2">
+        <h1 className="text-xl font-bold">Your Order: </h1>
+        {cartItems ? (
+          cartItems.map((item) => (
+            <CartListItem
+              key={item.products.id}
+              item={item}
+              onPriceUpdate={handlePriceUpdate}
+            />
+          ))
+        ) : (
+          <h1>No Items on Your cart</h1>
+        )}
+      </div>
+      <div className="lg:w-1/2 m-4 p-4 border border-black rounded-md bg-orange-100">
+        <h1 className="text-xl font-bold">Your Order: </h1>
+
         <CartWeight productTotal={totalPrices / 2} />
       </div>
     </div>

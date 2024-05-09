@@ -47,6 +47,9 @@ const KurirCost = ({ userCity, storeCity, weight, productTotal, storeId }) => {
 
   useEffect(() => {
     const fetchPrice = async () => {
+      console.log(userCity);
+      console.log(storeCity);
+
       try {
         const jneResponse = await axios.post('http://localhost:8000/kurir', {
           weight: Number(weight),
@@ -119,9 +122,15 @@ const KurirCost = ({ userCity, storeCity, weight, productTotal, storeId }) => {
         Grand Total: {String(Number(productTotal) + Number(selectedCourier))}
       </h1>
       <Link href="http://localhost:3000/">
-        <Button variant="contained" onClick={makeOrder}>
-          Order
-        </Button>
+        {selectedCourier ? (
+          <Button variant="contained" onClick={makeOrder}>
+            Order
+          </Button>
+        ) : (
+          <Button variant="contained" onClick={makeOrder} disabled>
+            Order
+          </Button>
+        )}
       </Link>
     </div>
   );
