@@ -142,7 +142,11 @@ export function ProductCard({ id, name, price, productPhotos, categories }) {
             alt={name}
             width={30}
             height={30}
-            image={`http://localhost:8000/${productPhotos[0].photoURL}`}
+            image={
+              productPhotos?.[0]?.photoURL
+                ? `http://localhost:8000/${productPhotos[0].photoURL}`
+                : `/product-image/default-image.jpg`
+            }
           />
         </div>
         <div>
